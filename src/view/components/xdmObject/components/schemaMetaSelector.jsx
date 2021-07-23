@@ -13,7 +13,7 @@ import React, { useEffect } from "react";
 import { ComboBox } from "@react-spectrum/combobox";
 import { Item } from "@adobe/react-spectrum";
 import PropTypes from "prop-types";
-import FieldDescriptionAndError from "../../../components/fieldDescriptionAndError";
+import FieldDescriptionAndError from "../../fieldDescriptionAndError";
 import fetchSchemasMeta from "../helpers/fetchSchemasMeta";
 import usePagedComboBox from "../../../utils/usePagedComboBox";
 import useReportAsyncError from "../../../utils/useReportAsyncError";

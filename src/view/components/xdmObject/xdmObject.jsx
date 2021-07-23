@@ -13,24 +13,24 @@ governing permissions and limitations under the License.
 import React, { useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
 import { ProgressCircle, Flex } from "@adobe/react-spectrum";
-import FormElementContainer from "../components/formElementContainer";
-import ExtensionView from "../components/extensionView";
-import getValueFromFormState from "./xdmObject/helpers/getValueFromFormState";
-import validate from "./xdmObject/helpers/validate";
-import render from "../render";
-import Editor from "./xdmObject/components/editor";
-import SandboxSelector from "./xdmObject/components/sandboxSelector";
-import SchemaMetaSelector from "./xdmObject/components/schemaMetaSelector";
-import useReportAsyncError from "../utils/useReportAsyncError";
-import FillParentAndCenterChildren from "../components/fillParentAndCenterChildren";
-import * as STATUS from "./xdmObject/constants/mainViewStatus";
-import loadDefaultSandbox from "./xdmObject/helpers/schemaSelection/loadDefaultSandbox";
-import useOnSandboxSelectionChange from "./xdmObject/helpers/schemaSelection/useOnSandboxSelectionChange";
-import useOnSchemaMetaSelectionChange from "./xdmObject/helpers/schemaSelection/useOnSchemaMetaSelectionChange";
-import { reducer, ACTION_TYPES } from "./xdmObject/helpers/mainViewState";
-import loadDefaultSchema from "./xdmObject/helpers/schemaSelection/loadDefaultSchema";
-import getInitialFormStateUsingAsyncErrorReporting from "./xdmObject/helpers/schemaSelection/getInitialFormStateUsingAsyncErrorReporting";
-import useAbortPreviousRequestsAndCreateSignal from "../utils/useAbortPreviousRequestsAndCreateSignal";
+import FormElementContainer from "../formElementContainer";
+import ExtensionView from "../extensionView";
+import getValueFromFormState from "./helpers/getValueFromFormState";
+import validate from "./helpers/validate";
+import render from "../../render";
+import Editor from "./components/editor";
+import SandboxSelector from "./components/sandboxSelector";
+import SchemaMetaSelector from "./components/schemaMetaSelector";
+import useReportAsyncError from "../../utils/useReportAsyncError";
+import FillParentAndCenterChildren from "../fillParentAndCenterChildren";
+import * as STATUS from "./constants/mainViewStatus";
+import loadDefaultSandbox from "./helpers/schemaSelection/loadDefaultSandbox";
+import useOnSandboxSelectionChange from "./helpers/schemaSelection/useOnSandboxSelectionChange";
+import useOnSchemaMetaSelectionChange from "./helpers/schemaSelection/useOnSchemaMetaSelectionChange";
+import { reducer, ACTION_TYPES } from "./helpers/mainViewState";
+import loadDefaultSchema from "./helpers/schemaSelection/loadDefaultSchema";
+import getInitialFormStateUsingAsyncErrorReporting from "./helpers/schemaSelection/getInitialFormStateUsingAsyncErrorReporting";
+import useAbortPreviousRequestsAndCreateSignal from "../../utils/useAbortPreviousRequestsAndCreateSignal";
 
 const XdmObject = ({ initInfo, formikProps, registerImperativeFormApi }) => {
   const {
@@ -240,14 +240,4 @@ XdmObject.propTypes = {
   registerImperativeFormApi: PropTypes.func
 };
 
-const XdmExtensionView = () => {
-  return (
-    <ExtensionView
-      render={props => {
-        return <XdmObject {...props} />;
-      }}
-    />
-  );
-};
-
-render(XdmExtensionView);
+export default XdmObject;

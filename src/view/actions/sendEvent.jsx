@@ -142,15 +142,7 @@ const SendEvent = () => {
               {item => <Item key={item.type}>{item.type}</Item>}
             </FormikComboBox>
           </DataElementSelector>
-          <DataElementSelector>
-            <FormikTextField
-              data-test-id="xdmField"
-              name="xdm"
-              label="XDM data"
-              description="Provide a data element which returns an object matching your XDM schema."
-              width="size-5000"
-            />
-          </DataElementSelector>
+          <XdmList/>
           <DataElementSelector>
             <FormikTextField
               data-test-id="dataField"

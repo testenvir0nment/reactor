@@ -14,7 +14,7 @@ import { useAsyncList } from "@react-stately/data";
 import { Item, Picker } from "@adobe/react-spectrum";
 import PropTypes from "prop-types";
 import fetchSandboxes from "../helpers/fetchSandboxes";
-import FieldDescriptionAndError from "../../../components/fieldDescriptionAndError";
+import FieldDescriptionAndError from "../../fieldDescriptionAndError";
 import useReportAsyncError from "../../../utils/useReportAsyncError";
 import useIsFirstRender from "../../../utils/useIsFirstRender";
 
