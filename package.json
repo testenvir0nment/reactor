@@ -50,6 +50,7 @@
     "antd": "^4.16.1",
     "classnames": "^2.2.6",
     "clipboard-copy": "^4.0.1",
+    "deep-equal": "^2.0.5",
     "escape-string-regexp": "^1.0.5",
     "formik": "^2.2.6",
     "once": "^1.4.0",

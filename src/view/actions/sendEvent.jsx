@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React from "react";
+import React, { useRef } from "react";
 import { object, string } from "yup";
 import { Item } from "@adobe/react-spectrum";
 import FormikComboBox from "../components/formikReactSpectrum3/formikComboBox";
@@ -26,12 +26,14 @@ import DecisionScopes, {
 import { DATA_ELEMENT_REQUIRED } from "../constants/validationErrorMessages";
 import FormElementContainer from "../components/formElementContainer";
 import InstanceNamePicker from "../components/instanceNamePicker";
+import XdmList from "./sendEvent/xdmList";
 
 const getInitialValues = ({ initInfo }) => {
   const {
     instanceName = initInfo.extensionSettings.instances[0].name,
     renderDecisions = false,
-    xdm = "",
+    xdm = [],
+    xdmMeta = [],
     data = "",
     type = "",
     mergeId = "",
@@ -42,7 +44,8 @@ const getInitialValues = ({ initInfo }) => {
   return {
     instanceName,
     renderDecisions,
-    xdm,
+    xdm: Array.isArray(xdm) ? xdm : [xdm],
+    xdmMeta,
     data,
     type,
     mergeId,
@@ -117,11 +120,15 @@ const knownEventTypeOptions = [
 ].map(type => ({ type }));
 
 const SendEvent = () => {
+  const xdmListRef = useRef();
   return (
     <ExtensionView
       getInitialValues={getInitialValues}
       getSettings={getSettings}
       formikStateValidationSchema={validationSchema}
+      validateNonFormikState={() => {
+        return xdmListRef.current.validate();
+      }}
       render={({ initInfo }) => (
         <FormElementContainer>
           <InstanceNamePicker
@@ -142,7 +149,7 @@ const SendEvent = () => {
               {item => <Item key={item.type}>{item.type}</Item>}
             </FormikComboBox>
           </DataElementSelector>
-          <XdmList/>
+          <XdmList ref={xdmListRef} initInfo={initInfo} />
           <DataElementSelector>
             <FormikTextField
               data-test-id="dataField"

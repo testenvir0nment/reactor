@@ -147,6 +147,14 @@ const usePagedComboBox = ({
     load(LOADING_STATE.LOADING);
   }, []);
 
+  // Abort any requests if this component unmounts.
+  useEffect(() => {
+    return () => {
+      console.log("aborting");
+      dataRef.current.abortController?.abort();
+    };
+  }, []);
+
   let result = {
     setSelectedItem: item => {
       setData({

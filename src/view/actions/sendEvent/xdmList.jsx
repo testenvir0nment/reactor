@@ -10,14 +10,86 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React from "react"
-import {useField} from "formik";
+import React, { useImperativeHandle, forwardRef, useRef } from "react";
+import { FieldArray, useField } from "formik";
+import {
+  Flex,
+  Button,
+  DialogTrigger,
+  Dialog,
+  Heading,
+  ButtonGroup,
+  Content,
+  Divider,
+  ActionButton
+} from "@adobe/react-spectrum";
+import XdmObjectDialog from "./xdmObjectDialog";
 
-const XdmList = (xdm) => {
-  const [{ value }, { touched, error }, { setValue, setTouched }] = useField(
-    name
+const XdmList = forwardRef(({ initInfo }, ref) => {
+  const [{ value: xdmArray }] = useField("xdm");
+  const [{ value: xdmMetaArray }] = useField("xdmMeta");
+  const dialogRef = useRef();
+
+  useImperativeHandle(ref, () => {
+    return {
+      validate() {
+        if (dialogRef.current) {
+          return dialogRef.current.validate();
+        }
+        return true;
+      }
+    };
+  });
+
+  const getXdmLabel = xdm => {
+    debugger;
+    if (typeof xdm === "string") {
+      return xdm;
+    }
+
+    return Object.keys(xdm)[0];
+  };
+
+  return (
+    <Flex direction="column" alignItems="flex-start">
+      <FieldArray
+        name="xdm"
+        render={arrayHelpers => {
+          return (
+            <>
+              {xdmArray.map((xdm, index) => {
+                return <div key={index}>{getXdmLabel(xdm)}</div>;
+              })}
+              <DialogTrigger type="fullscreenTakeover">
+                <ActionButton>Add XDM</ActionButton>
+                {close => {
+                  const onSave = ({ xdm }) => {
+                    debugger;
+                    arrayHelpers.push(settings.xdm);
+                    // xdmMetaArray.slice().push()
+                    close();
+                  };
+
+                  return (
+                    <XdmObjectDialog
+                      ref={dialogRef}
+                      imsAccess={initInfo.tokens.imsAccess}
+                      orgId={initInfo.company.orgId}
+                      xdm={null}
+                      xdmMeta={null}
+                      initInfo={initInfo}
+                      onSave={onSave}
+                      onCancel={close}
+                    />
+                  );
+                }}
+              </DialogTrigger>
+            </>
+          );
+        }}
+      />
+    </Flex>
   );
-
-}
+});
 
 export default XdmList;

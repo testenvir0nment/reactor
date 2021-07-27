@@ -18,6 +18,7 @@ const loadDefaultSchema = async ({
   imsAccess,
   settings,
   sandbox,
+  signal,
   reportAsyncError
 }) => {
   if (!sandbox) {
@@ -34,6 +35,7 @@ const loadDefaultSchema = async ({
       orgId,
       imsAccess,
       sandbox,
+      signal,
       reportAsyncError
     });
 
@@ -52,6 +54,7 @@ const loadDefaultSchema = async ({
       sandbox,
       schemaId: defaultSchemaId,
       schemaVersion: defaultSchemaVersion,
+      signal,
       reportAsyncError
     });
   }

@@ -18,6 +18,7 @@ const loadDefaultSandbox = async ({
   orgId,
   imsAccess,
   settings,
+  signal,
   reportAsyncError
 }) => {
   let sandboxes;
@@ -25,10 +26,13 @@ const loadDefaultSandbox = async ({
   try {
     ({ results: sandboxes } = await fetchSandboxes({
       orgId,
-      imsAccess
+      imsAccess,
+      signal
     }));
   } catch (e) {
-    reportAsyncError(e);
+    if (e.name !== "AbortError") {
+      reportAsyncError(e);
+    }
     return undefined;
   }
 

@@ -123,11 +123,12 @@ const XdmObject = ({ initInfo, formikProps, registerImperativeFormApi }) => {
     });
   });
 
-  useEffect(async () => {
+  const loadDefaults = async signal => {
     const sandbox = await loadDefaultSandbox({
       orgId,
       imsAccess,
       settings,
+      signal,
       reportAsyncError
     });
 
@@ -139,6 +140,7 @@ const XdmObject = ({ initInfo, formikProps, registerImperativeFormApi }) => {
         imsAccess,
         settings,
         sandbox,
+        signal,
         reportAsyncError
       });
     }
@@ -153,12 +155,24 @@ const XdmObject = ({ initInfo, formikProps, registerImperativeFormApi }) => {
       });
     }
 
+    if (signal.aborted) {
+      return;
+    }
+
     resetForm({ values: initialFormState });
     dispatch({
       type: ACTION_TYPES.DEFAULT_SANDBOX_AND_SCHEMA_LOADED,
       sandbox,
       schema
     });
+  };
+
+  useEffect(() => {
+    const signal = abortPreviousRequestsAndCreateSignal();
+    loadDefaults(signal);
+    return () => {
+      abortPreviousRequestsAndCreateSignal();
+    };
   }, []);
 
   useEffect(() => {
