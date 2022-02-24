@@ -307,6 +307,43 @@
       },
       "libPath": "dist/lib/actions/setConsent/index.js",
       "viewPath": "actions/setConsent.html"
+    },
+    {
+      "displayName": "Update variable",
+      "name": "update-variable",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "dataElement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instructions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": ["set", "delete", "push"]
+                },
+                "value": {
+                  "type": ["string", "number", "boolean"]
+                }
+              },
+              "required": ["path", "operator"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["dataElement", "instructions"]
+      },
+      "libPath": "dist/lib/actions/updateVariable/index.js",
+      "viewPath": "actions/updateVariable.html"
     }
   ],
   "events": [
@@ -419,6 +456,24 @@
       ],
       "libPath": "dist/lib/dataElements/xdmObject/index.js",
       "viewPath": "dataElements/xdmObject.html"
+    },
+    {
+      "displayName": "Object variable",
+      "name": "object-variable",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "cacheId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["cacheId"],
+        "additionalProperties": false
+      },
+      "libPath": "dist/lib/dataElements/objectVariable/index.js",
+      "viewPath": "dataElements/objectVariable.html"
     }
   ],
   "main": "dist/lib/instanceManager/index.js"
