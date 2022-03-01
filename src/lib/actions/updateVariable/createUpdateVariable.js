@@ -16,22 +16,22 @@ const {
   pushUndefined
 } = require("../../utils/pathUtils");
 
-module.exports = ({ stateManager }) => settings => {
-  const [variable, setVariable] = stateManager.useVariableByName(
-    settings.dataElement
-  );
-  setVariable(
-    settings.instructions.reduce((memo, { path, operator, value }) => {
-      switch (operator) {
-        case "set":
-          return setValue(memo, path, value);
-        case "delete":
-          return deletePath(memo, path);
-        case "push":
-          return pushUndefined(memo, path);
-        default:
-          return memo;
-      }
-    }, variable)
-  );
+module.exports = ({ variableStore, logger }) => settings => {
+  const variable = variableStore[settings.dataElement];
+
+  const newVariable = settings.instructions.reduce((memo, { path, operator, value }) => {
+    switch (operator) {
+      case "set":
+        return setValue(memo, path, value);
+      case "delete":
+        return deletePath(memo, path);
+      case "push":
+        return pushUndefined(memo, path);
+      default:
+        logger.warn("Unknown instruction: ", { path, operator, value });
+        return memo;
+    }
+  }, variable);
+
+  variableStore[settings.dataElement] = newVariable;
 };

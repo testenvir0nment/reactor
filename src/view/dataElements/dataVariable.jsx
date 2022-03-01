@@ -30,7 +30,7 @@ const getSettings = ({ values }) => {
   return values;
 };
 
-const EventMergeId = () => {
+const DataVariable = () => {
   return (
     <ExtensionView
       getInitialValues={getInitialValues}
@@ -39,11 +39,10 @@ const EventMergeId = () => {
         <FillParentAndCenterChildren>
           <Alert
             variant="informative"
-            title="Object variable data element"
+            title="Data variable data element"
             width="size-6000"
           >
-            This data element starts as an empty object. Use &quot;Update
-            variable&quot; action to set or clear properties.
+            Use &quot;Update variable&quot; actions to set or clear properties on this data element.
           </Alert>
           <Body size="L" marginTop="size-200">
             No configuration necessary.
@@ -54,4 +53,4 @@ const EventMergeId = () => {
   );
 };
 
-render(EventMergeId);
+render(DataVariable);

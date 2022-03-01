@@ -1,10 +1,10 @@
 {
-  "displayName": "Adobe Experience Platform Web SDK",
-  "name": "adobe-alloy",
+  "displayName": "Adobe Experience Platform Web SDK (josnyder)",
+  "name": "adobe-alloy-josnyder",
   "iconPath": "resources/images/icon.svg",
   "exchangeUrl": "https://exchange.adobe.com/experiencecloud.details.106387.aep-web-sdk.html",
   "platform": "web",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "The Adobe Experience Platform Web SDK allows for streaming data into the platform, syncing identities, personalizing content, and more.",
   "author": {
     "name": "Adobe"
@@ -409,12 +409,34 @@
       "viewPath": "dataElements/identityMap.html"
     },
     {
-      "displayName": "XDM object",
-      "name": "xdm-object",
+      "displayName": "Data variable",
+      "name": "data-variable",
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
         "properties": {
+          "cacheId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["cacheId"],
+        "additionalProperties": false
+      },
+      "libPath": "dist/lib/dataElements/dataVariable/index.js",
+      "viewPath": "dataElements/dataVariable.html"
+    },
+    {
+      "displayName": "XDM variable",
+      "name": "xdm-variable",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "cacheId": {
+            "type": "string",
+            "minLength": 1
+          },
           "sandbox": {
             "type": "object",
             "properties": {
@@ -440,40 +462,23 @@
             },
             "required": ["id", "version"],
             "additionalProperties": false
-          },
-          "data": {
-            "type": "object"
           }
         },
-        "required": ["schema", "data"],
+        "required": ["cacheId", "sandbox", "schema"],
         "additionalProperties": false
       },
       "transforms": [
         {
           "type": "remove",
           "propertyPath": "schema"
+        },
+        {
+          "type": "remove",
+          "propertyPath": "sandbox"
         }
       ],
-      "libPath": "dist/lib/dataElements/xdmObject/index.js",
-      "viewPath": "dataElements/xdmObject.html"
-    },
-    {
-      "displayName": "Object variable",
-      "name": "object-variable",
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {
-          "cacheId": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "required": ["cacheId"],
-        "additionalProperties": false
-      },
       "libPath": "dist/lib/dataElements/objectVariable/index.js",
-      "viewPath": "dataElements/objectVariable.html"
+      "viewPath": "dataElements/xdmVariable.html"
     }
   ],
   "main": "dist/lib/instanceManager/index.js"

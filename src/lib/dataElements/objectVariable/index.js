@@ -10,8 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const stateManager = require("../../stateManager");
+const variableStore = require("../../variableStore/index");
 
 module.exports = settings => {
-  return stateManager.getVariableByCacheId(settings.cacheId);
+  return variableStore[settings.cacheId] || {};
 };

@@ -26,7 +26,7 @@ const loadDefaultSchema = async ({
 
   let defaultSchemaId;
   let defaultSchemaVersion;
-  if (settings) {
+  if (settings && settings.schema) {
     defaultSchemaId = settings.schema.id;
     defaultSchemaVersion = settings.schema.version;
   } else {
