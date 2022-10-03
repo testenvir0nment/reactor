@@ -14,16 +14,16 @@ import createSetConsent from "../../../../../src/lib/actions/setConsent/createSe
 
 describe("Set Consent", () => {
   ["in", "out"].forEach(generalConsent => {
-    it(`executes setConsent command with "${generalConsent}" general consent`, () => {
-      const promiseReturnedFromInstance = Promise.resolve();
+    it(`executes setConsent command with "${generalConsent}" general consent`, async () => {
+      const promiseReturnedFromInstance = Promise.resolve("myvalue");
       const instance = jasmine
         .createSpy()
         .and.returnValue(promiseReturnedFromInstance);
       const instanceManager = jasmine.createSpyObj("instanceManager", {
-        getInstance: instance
+        getInstance: Promise.resolve(instance)
       });
       const action = createSetConsent({ instanceManager });
-      const promiseReturnedFromAction = action({
+      const returnValue = await action({
         instanceName: "myinstance",
         identityMap: "%dataelement123%",
         consent: [
@@ -35,7 +35,7 @@ describe("Set Consent", () => {
         ]
       });
 
-      expect(promiseReturnedFromAction).toBe(promiseReturnedFromInstance);
+      expect(returnValue).toEqual("myvalue");
       expect(instanceManager.getInstance).toHaveBeenCalledWith("myinstance");
       expect(instance).toHaveBeenCalledWith("setConsent", {
         identityMap: "%dataelement123%",
@@ -55,11 +55,11 @@ describe("Set Consent", () => {
   ["", null, undefined].forEach(identityMap => {
     it(`doesn't pass identityMap when it is ${JSON.stringify(
       identityMap
-    )}`, () => {
+    )}`, async () => {
       const instance = jasmine.createSpy();
-      const instanceManager = { getInstance: () => instance };
+      const instanceManager = { getInstance: () => Promise.resolve(instance) };
       const action = createSetConsent({ instanceManager });
-      action({
+      await action({
         instanceName: "myinstance",
         identityMap,
         consent: [{ standard: "IAB TCF", version: "2.0", value: "1234abcd" }]
@@ -71,20 +71,18 @@ describe("Set Consent", () => {
   });
 
   it("throws an error when no matching instance found", () => {
-    const instanceManager = jasmine.createSpyObj("instanceManager", {
-      getInstance: undefined
-    });
+    const instanceManager = {
+      getInstance: () => Promise.resolve()
+    };
     const action = createSetConsent({ instanceManager });
 
-    expect(() => {
+    return expectAsync(
       action({
         instanceName: "myinstance",
         purposes: "none"
-      });
-    }).toThrow(
-      new Error(
-        'Failed to set consent for instance "myinstance". No matching instance was configured with this name.'
-      )
+      })
+    ).toBeRejectedWithError(
+      'Failed to set consent for instance "myinstance". No matching instance was configured with this name.'
     );
   });
 });

@@ -15,15 +15,18 @@ module.exports = ({
   sendEventCallbackStorage
 }) => settings => {
   const { instanceName, ...otherSettings } = settings;
-  const instance = instanceManager.getInstance(instanceName);
+  return instanceManager
+    .getInstance(instanceName)
+    .then(instance => {
+      if (!instance) {
+        throw new Error(
+          `Failed to apply response for instance "${instanceName}". No matching instance was configured with this name.`
+        );
+      }
 
-  if (!instance) {
-    throw new Error(
-      `Failed to apply response for instance "${instanceName}". No matching instance was configured with this name.`
-    );
-  }
-
-  return instance("applyResponse", otherSettings).then(result => {
-    sendEventCallbackStorage.triggerEvent(result);
-  });
+      return instance("applyResponse", otherSettings);
+    })
+    .then(result => {
+      sendEventCallbackStorage.triggerEvent(result);
+    });
 };

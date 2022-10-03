@@ -28,11 +28,24 @@ module.exports = ({
       stagingEdgeConfigId,
       developmentEdgeConfigId,
       onBeforeEventSend,
+      idMigrationEnabled,
       ...options
     }) => {
       const instance = createInstance({ name });
       window[name] = instance;
-      instanceByName[name] = instance;
+      instanceByName[name] = Promise.resolve()
+        .then(() => {
+          // when ID migration is enabled, wait for the Visitor extension to be available before
+          // running commands after configure
+          if (idMigrationEnabled) {
+            return turbine.getSharedModule("adobe-mcid", "mcid-instance");
+          }
+          return undefined;
+        })
+        .then(() => {
+          // no need to do anything with the visitor shared module, Web SDK can access it from window.Visitor
+          return instance;
+        });
 
       const computedEdgeConfigId =
         (turbine.environment.stage === "development" &&
@@ -60,7 +73,11 @@ module.exports = ({
      * @returns {Function}
      */
     getInstance(name) {
-      return instanceByName[name];
+      // Use a promise chain here so that even when instanceByName[name] is undefined,
+      // this function will still return a promise
+      return Promise.resolve().then(() => {
+        return instanceByName[name];
+      });
     },
     /**
      * Synchronously creates an event merge ID.

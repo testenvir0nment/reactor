@@ -13,12 +13,12 @@ governing permissions and limitations under the License.
 import createSendEvent from "../../../../../src/lib/actions/sendEvent/createSendEvent";
 
 describe("Send Event", () => {
-  it("executes event command and notifies sendEventCallbackStorage", () => {
+  it("executes event command and notifies sendEventCallbackStorage", async () => {
     const instance = jasmine
       .createSpy()
       .and.returnValue(Promise.resolve({ foo: "bar" }));
     const instanceManager = jasmine.createSpyObj("instanceManager", {
-      getInstance: instance
+      getInstance: Promise.resolve(instance)
     });
     const sendEventCallbackStorage = jasmine.createSpyObj(
       "sendEventCallbackStorage",
@@ -40,7 +40,7 @@ describe("Send Event", () => {
         }
       ]
     };
-    const promiseReturnedFromAction = action({
+    await action({
       instanceName: "myinstance",
       renderDecisions: true,
       xdm: dataLayer
@@ -67,30 +67,28 @@ describe("Send Event", () => {
     expect(xdmOption).not.toBe(dataLayer);
     expect(xdmOption.fruits[0]).not.toBe(dataLayer.fruits[0]);
 
-    return promiseReturnedFromAction.then(() => {
-      expect(sendEventCallbackStorage.triggerEvent).toHaveBeenCalledWith({
-        foo: "bar"
-      });
+    expect(sendEventCallbackStorage.triggerEvent).toHaveBeenCalledWith({
+      foo: "bar"
     });
   });
+
   it("throws an error when no matching instance found", () => {
     const instanceManager = jasmine.createSpyObj("instanceManager", [
       "getInstance"
     ]);
+    instanceManager.getInstance.and.returnValue(Promise.resolve());
     const action = createSendEvent({ instanceManager });
 
-    expect(() => {
+    return expectAsync(
       action({
         instanceName: "myinstance",
         renderDecisions: true,
         xdm: {
           foo: "bar"
         }
-      });
-    }).toThrow(
-      new Error(
-        'Failed to send event for instance "myinstance". No matching instance was configured with this name.'
-      )
+      })
+    ).toBeRejectedWithError(
+      'Failed to send event for instance "myinstance". No matching instance was configured with this name.'
     );
   });
 });

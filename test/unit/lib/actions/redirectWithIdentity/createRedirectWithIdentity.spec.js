@@ -23,7 +23,7 @@ describe("createRedirectWithIdentity", () => {
   beforeEach(() => {
     instanceManager = jasmine.createSpyObj("instanceManager", ["getInstance"]);
     instance = jasmine.createSpy("instance");
-    instanceManager.getInstance.and.returnValue(instance);
+    instanceManager.getInstance.and.returnValue(Promise.resolve(instance));
     instance.and.returnValue(Promise.resolve({ url: "newurl" }));
     document = { location: "originalLocation" };
     event = {
@@ -43,18 +43,19 @@ describe("createRedirectWithIdentity", () => {
   });
 
   it("returns resolved promise when instance isn't found", async () => {
-    instanceManager.getInstance.and.returnValue(undefined);
+    instanceManager.getInstance.and.returnValue(Promise.resolve());
     await expectAsync(
       redirectWithIdentity({ instanceName: "myinstance" }, event)
     ).toBeResolvedTo(undefined);
     expect(instanceManager.getInstance).toHaveBeenCalledOnceWith("myinstance");
-    expect(document.location).toEqual("originalLocation");
-    expect(event.nativeEvent.preventDefault).not.toHaveBeenCalled();
-    expect(logger.warn).toHaveBeenCalled();
+    expect(document.location).toEqual("originalHref");
+    expect(logger.warn).toHaveBeenCalledOnceWith(
+      `Instance "myinstance" not found when running "Redirect with identity."`
+    );
   });
 
   it("doesn't redirect when there is no nativeEvent", async () => {
-    await expectAsync(redirectWithIdentity({ instanceName: "myinstance" }, {}));
+    await redirectWithIdentity({ instanceName: "myinstance" }, {});
     expect(document.location).toEqual("originalLocation");
     expect(logger.warn).toHaveBeenCalled();
   });
@@ -75,26 +76,23 @@ describe("createRedirectWithIdentity", () => {
   });
 
   it("doesn't call preventDefault when it isn't defined", async () => {
-    await expectAsync(
-      redirectWithIdentity(
-        { instanceName: "myinstance" },
-        {
-          nativeEvent: {
-            target: {
-              href: "originalHref"
-            }
+    await redirectWithIdentity(
+      { instanceName: "myinstance" },
+      {
+        nativeEvent: {
+          target: {
+            href: "originalHref"
           }
         }
-      )
+      }
     );
     expect(document.location).toEqual("newurl");
     expect(logger.warn).not.toHaveBeenCalled();
   });
 
   it("redirects", async () => {
-    await expectAsync(
-      redirectWithIdentity({ instanceName: "myinstance" }, event)
-    );
+    await redirectWithIdentity({ instanceName: "myinstance" }, event);
+
     expect(event.nativeEvent.preventDefault).toHaveBeenCalledOnceWith();
     expect(instance).toHaveBeenCalledOnceWith("appendIdentityToUrl", {
       url: "originalHref"

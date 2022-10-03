@@ -30,3 +30,23 @@ module.exports = createInstanceManager({
   orgId: _satellite.company.orgId,
   wrapOnBeforeEventSend
 });
+
+/*
+module.exports = Promise.resolve()
+.then(() => {
+  console.log("Waiting for mcid to be available");
+  // Make sure that the Experience Cloud ID Service is initialized first
+  return turbine.getSharedModule('adobe-mcid', 'mcid-instance');
+})
+.then(() => {
+  console.log("Initializing Alloy");
+  return createInstanceManager({
+    turbine,
+    window,
+    createInstance,
+    createEventMergeId,
+    orgId: _satellite.company.orgId,
+    wrapOnBeforeEventSend
+  });
+});
+*/

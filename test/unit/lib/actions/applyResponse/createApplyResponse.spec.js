@@ -37,14 +37,14 @@ describe("Apply response", () => {
   });
 
   it("calls applyResponse with settings", async () => {
-    instanceManager.getInstance.and.returnValue(instance);
+    instanceManager.getInstance.and.returnValue(Promise.resolve(instance));
     instance.and.returnValue(Promise.resolve());
     await applyResponse({ instanceName: "myinstance", a: "1" });
     expect(instance).toHaveBeenCalledOnceWith("applyResponse", { a: "1" });
   });
 
   it("triggers an event on the send event callback storage", async () => {
-    instanceManager.getInstance.and.returnValue(instance);
+    instanceManager.getInstance.and.returnValue(Promise.resolve(instance));
     instance.and.returnValue(Promise.resolve("myresult"));
     await applyResponse({ instanceName: "myinstance" });
     expect(sendEventCallbackStorage.triggerEvent).toHaveBeenCalledOnceWith(

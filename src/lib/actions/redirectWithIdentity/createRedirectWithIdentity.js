@@ -15,15 +15,6 @@ module.exports = ({ instanceManager, document, logger }) => (
   event
 ) => {
   const { instanceName } = settings;
-  const instance = instanceManager.getInstance(instanceName);
-
-  if (!instance) {
-    logger.warn(
-      `Instance "${instanceName}" not found when running "Redirect with identity."`
-    );
-    return Promise.resolve();
-  }
-
   if (!event || !event.nativeEvent) {
     logger.warn(
       `Native event not found when running "Redirect with identity." This action is meant to be used with a Core click event.`
@@ -43,9 +34,21 @@ module.exports = ({ instanceManager, document, logger }) => (
   }
 
   const url = event.nativeEvent.target.href;
-  return instance("appendIdentityToUrl", { url }).then(
-    ({ url: newLocation }) => {
+
+  return instanceManager
+    .getInstance(instanceName)
+    .then(instance => {
+      if (!instance) {
+        logger.warn(
+          `Instance "${instanceName}" not found when running "Redirect with identity."`
+        );
+        // We already called preventDefault on the event, so we should redirect to the original url
+        return Promise.resolve({ url });
+      }
+
+      return instance("appendIdentityToUrl", { url });
+    })
+    .then(({ url: newLocation }) => {
       document.location = newLocation;
-    }
-  );
+    });
 };

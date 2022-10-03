@@ -14,7 +14,12 @@ const createSendEvent = require("./createSendEvent");
 const instanceManager = require("../../instanceManager/index");
 const sendEventCallbackStorage = require("../../sendEventCallbackStorage");
 
-module.exports = createSendEvent({
-  instanceManager,
-  sendEventCallbackStorage
-});
+module.exports = settings => {
+  return instanceManager.then(im => {
+    const sendEvent = createSendEvent({
+      instanceManager: im,
+      sendEventCallbackStorage
+    });
+    return sendEvent(settings);
+  });
+};

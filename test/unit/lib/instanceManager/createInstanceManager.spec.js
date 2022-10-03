@@ -122,8 +122,16 @@ describe("Instance Manager", () => {
 
   it("returns instance by name", () => {
     build();
-    const instance = instanceManager.getInstance("alloy2");
-    expect(instance).toBe(alloy2);
+    return instanceManager.getInstance("alloy2").then(instance => {
+      expect(instance).toBe(alloy2);
+    });
+  });
+
+  it("returns undefined when instance isn't defined", () => {
+    build();
+    return instanceManager.getInstance("bogus").then(instance => {
+      expect(instance).toBeUndefined();
+    });
   });
 
   it("creates an event merge ID", () => {

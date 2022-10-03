@@ -26,6 +26,7 @@ import RestoreDefaultValueButton from "../components/restoreDefaultValueButton";
 import copyPropertiesIfValueDifferentThanDefault from "./utils/copyPropertiesIfValueDifferentThanDefault";
 import copyPropertiesWithDefaultFallback from "./utils/copyPropertiesWithDefaultFallback";
 import FormElementContainer from "../components/formElementContainer";
+import FieldDescriptionAndError from "../components/fieldDescriptionAndError";
 
 const CONTEXT_GRANULARITY = {
   ALL: "all",
@@ -223,13 +224,20 @@ const DataCollectionSection = ({ instanceFieldName }) => {
               >
                 {contextOptions.map(contextOption => {
                   return (
-                    <Checkbox
-                      key={contextOption.value}
-                      data-test-id={contextOption.testId}
-                      value={contextOption.value}
+                    <FieldDescriptionAndError
+                      description="my description a lorem ipsum"
+                      messagePaddingTop="size-0"
+                      messagePaddingStart="size-300"
                     >
-                      {contextOption.label}
-                    </Checkbox>
+                      <Checkbox
+                        key={contextOption.value}
+                        data-test-id={contextOption.testId}
+                        value={contextOption.value}
+                        width="size-5000"
+                      >
+                        {contextOption.label}
+                      </Checkbox>
+                    </FieldDescriptionAndError>
                   );
                 })}
               </FormikCheckboxGroup>
