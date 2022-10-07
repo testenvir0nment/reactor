@@ -9,17 +9,13 @@ module.exports = config => {
       base: "SauceLabs",
       browserName: "chrome",
       browserVersion: "latest",
-      "sauce:options": {
-        tags: ["w3c-chrome"]
-      }
+      platform: "Windows 11"
     },
     sl_firefoxW3C: {
       base: "SauceLabs",
       browserName: "firefox",
       browserVersion: "latest",
-      "sauce:options": {
-        tags: ["w3c-firefox"]
-      }
+      platform: "Windows 11"
     },
     sl_safariW3C: {
       base: "SauceLabs",
