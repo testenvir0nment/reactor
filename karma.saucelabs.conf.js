@@ -7,21 +7,42 @@ module.exports = config => {
   const customLaunchers = {
     sl_chromeW3C: {
       base: "SauceLabs",
-      browserName: "chrome",
-      browserVersion: "latest",
-      platform: "Windows 11"
+      browserName: 'firefox',
+      browserVersion: '105',
+      platformName: 'Windows 10',
+      acceptInsecureCerts: true,
+      'sauce:options': {
+        recordVideo: false,
+        videoUploadOnPass: false,
+        recordScreenshots: false,
+        recordLogs: false,
+      }
     },
     sl_firefoxW3C: {
       base: "SauceLabs",
-      browserName: "firefox",
-      browserVersion: "latest",
-      platform: "Windows 11"
+      browserName: 'chrome',
+      browserVersion: 'latest',
+      platformName: 'Windows 10',
+      acceptInsecureCerts: true,
+      'sauce:options': {
+        recordVideo: false,
+        videoUploadOnPass: false,
+        recordScreenshots: false,
+        recordLogs: false,
+      }
     },
     sl_safariW3C: {
       base: "SauceLabs",
-      browserName: "safari",
-      browserVersion: "latest",
-      platform: "macOS 11.00"
+      browserName: 'safari',
+      browserVersion: '16',
+      platformName: 'macOS 12',
+      acceptInsecureCerts: true,
+      'sauce:options': {
+        recordVideo: false,
+        videoUploadOnPass: false,
+        recordScreenshots: false,
+        recordLogs: false,
+      }
     }
   };
 
