@@ -19,12 +19,11 @@ module.exports = config => {
     sl_firefoxW3C: {
       base: "SauceLabs",
       browserName: "firefox",
-      platformName: "Windows 11",
-      browserVersion: "latest",
+      platformName: "Windows 10",
+      browserVersion: "100",
       "sauce:options": {
-        screenResolution: "1280x1024",
-        seleniumVersion: "4.5.0",
-        tunnelIdentifier: process.env.JOB_NUMBER
+        seleniumVersion: "3.14.0",
+        build: "Alloy Firefox"
       }
     },
     sl_edgeW3C: {

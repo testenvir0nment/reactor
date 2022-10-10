@@ -28,16 +28,6 @@ jobs:
       run: npm ci
     - name: Build
       run: npm run build
-    - name: Setup firefox
-      uses: browser-actions/setup-firefox@latest
-      with:
-        firefox-version: "latest"
-    - run: npx karma start --browsers Firefox --single-run
-    - uses: saucelabs/sauce-connect-action@v2
-      with:
-          username: ${{ secrets.SAUCE_USERNAME }}
-          accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
-          tunnelName: $GITHUB_JOB
     - name: Run Unit Test
       run: npx karma start karma.saucelabs.conf.js --single-run
       env:
