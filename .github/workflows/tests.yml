@@ -28,6 +28,11 @@ jobs:
       run: npm ci
     - name: Build
       run: npm run build
+    - name: Setup firefox
+      uses: browser-actions/setup-firefox@latest
+      with:
+        firefox-version: "latest"
+    - run: npx karma start --browsers Firefox --single-run
     - uses: saucelabs/sauce-connect-action@v2
       with:
           username: ${{ secrets.SAUCE_USERNAME }}
@@ -39,11 +44,6 @@ jobs:
         BUILD_NUMBER: $GITHUB_RUN_NUMBER
         BUILD_ID: $GITHUB_RUN_ID
         JOB_NUMBER: $GITHUB_JOB
-    - name: Setup firefox
-      uses: browser-actions/setup-firefox@latest
-      with:
-        firefox-version: "latest"
-    - run: npx karma start --browsers Firefox --single-run
     # - name: Run Unit Test
     #   run: npm run test:unit:saucelabs
   functional-chrome:
