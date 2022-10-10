@@ -16,16 +16,15 @@ module.exports = config => {
       browserVersion: "latest",
       platform: "macOS 11.00"
     },
-    // sl_firefoxW3C: {
-    //   base: "SauceLabs",
-    //   browserName: "firefox",
-    //   platformName: "Windows 10",
-    //   browserVersion: "100",
-    //   "sauce:options": {
-    //     seleniumVersion: "3.14.0",
-    //     build: "Firefox alloy"
-    //   }
-    // },
+    sl_firefoxW3C: {
+      base: "SauceLabs",
+      browserName: "firefox",
+      platformName: "Windows 11",
+      browserVersion: "latest",
+      "sauce:options": {
+        geckodriverVersion: "0.27.0"
+      }
+    },
     sl_edgeW3C: {
       base: "SauceLabs",
       browserName: "microsoftedge",
