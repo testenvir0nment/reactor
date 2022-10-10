@@ -23,7 +23,7 @@ module.exports = config => {
       browserVersion: "latest",
       "sauce:options": {
         screenResolution: "1280x1024",
-        seleniumVersion: "3.141.59",
+        seleniumVersion: "4.5.0",
         tunnelIdentifier: process.env.JOB_NUMBER
       }
     },
