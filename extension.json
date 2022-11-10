@@ -500,6 +500,24 @@
       ],
       "libPath": "dist/lib/dataElements/xdmObject/index.js",
       "viewPath": "dataElements/xdmObject.html"
+    },
+    {
+      "displayName": "Product list items",
+      "name": "product-list-items",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["products"],
+        "additionalProperties": false
+      },
+      "libPath": "dist/lib/dataElements/products/index.js",
+      "viewPath": "dataElements/productListItems.html"
     }
   ],
   "main": "dist/lib/instanceManager/index.js"
