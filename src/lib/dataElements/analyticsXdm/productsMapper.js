@@ -10,6 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+const { setValue } = require("../../utils/pathUtils");
+
 const DEFAULT_ITEM = ["","","","","",""];
 
 const parseKeyValue = keyValues => {
@@ -43,9 +45,8 @@ const addEventsTo = (eventsKeyValues, result) => {
   });
 };
 
-module.exports = settings => {
-  const { products = "" } = settings || {};
-  return products.split(",").map(item => {
+module.exports = (products, xdm) => {
+  const productListItems = products.split(",").map(item => {
     const [category, productName, quantity, price, events, evars] = item.split(";").concat(DEFAULT_ITEM);
     const quantityInteger = parseInt(quantity, 10);
     const priceNumber = Number(price);
@@ -83,4 +84,7 @@ module.exports = settings => {
     return result;
   }).filter(result => Object.keys(result).length !== 0);
 
+  if (productListItems.length > 0) {
+    setValue(xdm, "productListItems", productListItems);
+  }
  };

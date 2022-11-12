@@ -502,22 +502,25 @@
       "viewPath": "dataElements/xdmObject.html"
     },
     {
-      "displayName": "Product list items",
-      "name": "product-list-items",
+      "displayName": "Analytics XDM",
+      "name": "analytics-xdm",
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
         "properties": {
-          "products": {
+          "tracker": {
             "type": "string",
             "minLength": 1
+          },
+          "delimiters": {
+            "type": "object"
           }
         },
-        "required": ["products"],
+        "required": ["tracker"],
         "additionalProperties": false
       },
-      "libPath": "dist/lib/dataElements/products/index.js",
-      "viewPath": "dataElements/productListItems.html"
+      "libPath": "dist/lib/dataElements/analyticsXdm/index.js",
+      "viewPath": "dataElements/analyticsXdm.html"
     }
   ],
   "main": "dist/lib/instanceManager/index.js"
