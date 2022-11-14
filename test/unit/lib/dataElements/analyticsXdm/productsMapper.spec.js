@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import xdmFromTracker from "../../../../../src/lib/dataElements/analyticsXdm/index";
 
-fdescribe("products", () => {
+describe("products", () => {
   const test = (input, expected) => {
     expect(xdmFromTracker({ tracker: { products: input }})).toEqual(expected);
   }

@@ -67,6 +67,22 @@ module.exports = settings => {
 
   const { tracker, delimiters = {} } = settings || {};
 
+  let trackerObject;
+  if (typeof tracker === "string") {
+    trackerObject = window[tracker];
+    if (!trackerObject) {
+      console.warn(`Could not find tracker at "window.${tracker}".`);
+      return undefined;
+    }
+  } else {
+    trackerObject = tracker;
+  }
+
+  if (typeof trackerObject !== "object") {
+    console.warn(`Tracker was not an object.`);
+    return undefined;
+  }
+
   const mappers = [];
   mappers.push(staticKeyMapper({
     "campaign": stringMapper("marketing.trackingCode"),
@@ -89,14 +105,13 @@ module.exports = settings => {
   mappers.push(numberedKeyMapper("list", 3, listMapper(delimiters)));
   mappers.push(numberedKeyMapper("eVar", 250, evarMapper));
 
-
   const xdm = {};
   Object.keys(tracker || {}).forEach(key => {
     const found = mappers.reduce((found, mapper) => {
       return found || mapper(key, tracker[key], xdm);
     }, false);
     if (!found) {
-      console.log(`Not found ${key}`)
+      console.warn(`Not found ${key}`);
     }
   });
   return xdm;

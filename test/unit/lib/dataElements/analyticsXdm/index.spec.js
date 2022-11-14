@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import analyticsXdm from "../../../../../src/lib/dataElements/analyticsXdm/index";
 
-fdescribe("analyticsXdm", () => {
+describe("analyticsXdm", () => {
 
   let delimiters;
 
@@ -22,7 +22,7 @@ fdescribe("analyticsXdm", () => {
 
   const test = (tracker, expected) => {
     const xdm = analyticsXdm({ tracker, delimiters });
-    console.log(JSON.stringify(xdm, null, 2));
+    //console.log(JSON.stringify(xdm, null, 2));
     expect(xdm).toEqual(expected);
   }
 
