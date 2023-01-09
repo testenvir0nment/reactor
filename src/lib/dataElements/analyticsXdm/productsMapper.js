@@ -45,15 +45,6 @@ const parseEvents = keyValues => {
 };
 const parseEvars = createParseNumberedKeyValues("evar", 250);
 
-const addEventsTo = (eventsKeyValues, result) => {
-  eventsKeyValues.forEach(([key, value]) => {
-    const start = Math.floor(key / 100) * 100;
-    const subKey = `event${start + 1}to${start + 100}`;
-    result[subKey] = result[subKey] || {};
-    result[subKey][`event${key}`] = { value: Number(value) };
-  });
-};
-
 module.exports = (products, xdm) => {
   const productListItems = products
     .split(",")
@@ -70,7 +61,7 @@ module.exports = (products, xdm) => {
       const priceNumber = Number(price);
       const eventsKeyValues = parseEvents(events);
       const evarsKeyValues = parseEvars(evars);
-      const result = {};
+      let result = {};
       if (category !== "") {
         result.lineItemId = category;
       }
@@ -85,27 +76,29 @@ module.exports = (products, xdm) => {
       if (price !== "" && !isNaN(priceNumber)) {
         result.priceTotal = priceNumber;
       }
-      if (evarsKeyValues.length > 0) {
-        result._experience = {
-          analytics: {
-            customDimensions: {
-              eVars: evarsKeyValues.reduce((memo, [key, value]) => {
-                memo[`eVar${key}`] = value;
-                return memo;
-              }, {})
-            }
-          }
-        };
-      }
-      if (eventsKeyValues.length > 0) {
-        result._experience = result._experience || { analytics: {} };
-        addEventsTo(eventsKeyValues, result._experience.analytics);
-      }
+      result = evarsKeyValues.reduce((memo, [key, value]) => {
+        return setValue(
+          memo,
+          `_experience.analytics.customDimensions.eVars.eVar${key}`,
+          value
+        );
+      }, result);
+
+      result = eventsKeyValues.reduce((memo, [key, value]) => {
+        const start = Math.floor(key / 100) * 100;
+        return setValue(
+          memo,
+          `_experience.analytics.event${start + 1}to${start +
+            100}.event${key}.value`,
+          Number(value)
+        );
+      }, result);
       return result;
     })
     .filter(result => Object.keys(result).length !== 0);
 
   if (productListItems.length > 0) {
-    setValue(xdm, "productListItems", productListItems);
+    return setValue(xdm, "productListItems", productListItems);
   }
+  return xdm;
 };

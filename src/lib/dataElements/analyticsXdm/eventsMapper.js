@@ -11,18 +11,18 @@ const DEFAULT_EVENTS = {
 };
 
 module.exports = (events, xdm) => {
-  `${events}`.split(",").forEach(event => {
+  return `${events}`.split(",").reduce((memo, event) => {
     const [key, value = "1"] = event.split("=");
     let path;
     if (DEFAULT_EVENTS[key]) {
       path = `commerce.${DEFAULT_EVENTS[key]}.value`;
     } else {
       if (key.length <= 5 || key.substring(0, 5) !== "event") {
-        return;
+        return memo;
       }
       const i = parseInt(key.substring(5), 10);
       if (i < 1 || i > 1000) {
-        return;
+        return memo;
       }
       const start = Math.floor(key / 100) * 100;
       path = `_experience.analytics.event${start + 1}to${start +
@@ -33,12 +33,13 @@ module.exports = (events, xdm) => {
     const parsedValue = Number(value2);
     // eslint-disable-next-line no-restricted-globals
     if (isNaN(parsedValue)) {
-      return;
+      return memo;
     }
 
-    setValue(xdm, `${path}.value`, parsedValue);
+    let newXdm = setValue(memo, `${path}.value`, parsedValue);
     if (id) {
-      setValue(xdm, `${path}.id`, id);
+      newXdm = setValue(newXdm, `${path}.id`, id);
     }
-  });
+    return newXdm;
+  }, xdm);
 };
