@@ -11,15 +11,29 @@ governing permissions and limitations under the License.
 */
 
 import React, { useState, Fragment } from "react";
+import PropTypes from "prop-types";
+import { object, string } from "yup";
+import { useField } from "formik";
+import {
+  Cell,
+  Column,
+  Row,
+  TableView,
+  TableBody,
+  TableHeader,
+  Flex,
+  Button,
+  Text,
+  View,
+  Divider,
+  Heading
+} from "@adobe/react-spectrum";
+import EditIcon from "@spectrum-icons/workflow/Edit";
 import render from "../render";
 import ExtensionView from "../components/extensionView";
 import FormElementContainer from "../components/formElementContainer";
 import DataElementSelector from "../components/dataElementSelector";
 import FormikTextField from "../components/formikReactSpectrum3/formikTextField";
-import { object, string } from "yup";
-import { useField } from "formik";
-import {Cell, Column, Row, TableView, TableBody, TableHeader, Flex, Button, Text, LabeledValue, View, Divider, Heading} from "@adobe/react-spectrum";
-import EditIcon from "@spectrum-icons/workflow/Edit";
 import FormikCheckbox from "../components/formikReactSpectrum3/formikCheckbox";
 import Alert from "../components/alert";
 
@@ -28,31 +42,29 @@ const DEFAULT_LIST_DELIMITER = ",";
 const DEFAULT_HIER_DELIMITER = "|";
 
 const getInitialValues = ({ initInfo }) => {
-  const {
-    tracker = "",
-    delimiters = {},
-  } = initInfo.settings || {};
+  const { tracker = "", delimiters = {} } = initInfo.settings || {};
 
   const props = [];
   const lists = [];
   const hiers = [];
 
-  let key, i;
-  for (i = 1; i <= 75; i++) {
-     key = `prop${i}`;
+  let key;
+  let i;
+  for (i = 1; i <= 75; i += 1) {
+    key = `prop${i}`;
     if (delimiters[key]) {
       props.push({ key, list: true, delimiter: delimiters[key] });
     } else {
       props.push({ key, list: false, delimiter: DEFAULT_PROP_DELIMITER });
     }
   }
-  for (i = 1; i <= 5; i++) {
+  for (i = 1; i <= 3; i += 1) {
     key = `list${i}`;
     lists.push({ key, delimiter: delimiters[key] || DEFAULT_LIST_DELIMITER });
   }
-  for (i = 1; i <= 5; i++) {
+  for (i = 1; i <= 5; i += 1) {
     key = `hier${i}`;
-    hiers.push({ key, delimiter: delimiters[key] || DEFAULT_HIER_DELIMITER })
+    hiers.push({ key, delimiter: delimiters[key] || DEFAULT_HIER_DELIMITER });
   }
 
   return {
@@ -64,15 +76,10 @@ const getInitialValues = ({ initInfo }) => {
 };
 
 const getSettings = ({ values }) => {
-  const {
-    tracker,
-    props,
-    lists,
-    hiers
-  } = values;
+  const { tracker, props, lists, hiers } = values;
 
   const delimiters = {};
-  props.forEach(({ key, list, delimiter}) => {
+  props.forEach(({ key, list, delimiter }) => {
     if (list) {
       delimiters[key] = delimiter;
     }
@@ -96,44 +103,58 @@ const validationSchema = object().shape({
 
 const ViewDelimiters = ({ items, label }) => {
   return (
-    <TableView
-      aria-label={label}
-      width="size-3600"
-    >
+    <TableView aria-label={label} width="size-3600">
       <TableHeader>
         <Column key="key">{label}</Column>
         <Column key="delimiter">Delimiter</Column>
       </TableHeader>
       <TableBody items={items}>
-        {prop => (
-          <Row>
-            {key => <Cell>{prop[key]}</Cell>}
-          </Row>
-        )}
+        {prop => <Row>{key => <Cell>{prop[key]}</Cell>}</Row>}
       </TableBody>
     </TableView>
   );
-}
+};
+ViewDelimiters.propTypes = {
+  items: PropTypes.array.isRequired,
+  label: PropTypes.string.isRequired
+};
 
-const EditListProps = ({ props }) => {
+const ListPropEditor = ({ allProps }) => {
   return (
-    <Flex
-      direction="column"
-      width="size-3600"
-      gap="size-100"
-    >
+    <Flex direction="column" width="size-3600" gap="size-100">
       <Flex
         direction="row"
         gap="size-100"
         alignItems="center"
         marginStart="size-200"
       >
-        <Heading level="4" width="size-1000" marginBottom="size-0" marginTop="size-0">Prop</Heading>
-        <Heading level="4" width="size-500" marginBottom="size-0" marginTop="size-0">List?</Heading>
-        <Heading level="4" width="size-1600" marginBottom="size-0" marginTop="size-0">Delimiter</Heading>
+        <Heading
+          level="4"
+          width="size-1000"
+          marginBottom="size-0"
+          marginTop="size-0"
+        >
+          Prop
+        </Heading>
+        <Heading
+          level="4"
+          width="size-500"
+          marginBottom="size-0"
+          marginTop="size-0"
+        >
+          List?
+        </Heading>
+        <Heading
+          level="4"
+          width="size-1600"
+          marginBottom="size-0"
+          marginTop="size-0"
+        >
+          Delimiter
+        </Heading>
       </Flex>
-      <Divider size="S"/>
-      {props.map(({ key, list }, i) => (
+      <Divider size="S" />
+      {allProps.map(({ key, list }, i) => (
         <Fragment key={key}>
           <Flex
             direction="row"
@@ -141,11 +162,7 @@ const EditListProps = ({ props }) => {
             alignItems="center"
             marginStart="size-200"
           >
-            <View
-              width="size-1000"
-            >
-              {key}
-            </View>
+            <View width="size-1000">{key}</View>
             <FormikCheckbox
               name={`props.${i}.list`}
               data-test-id={`prop${i}ListField`}
@@ -160,30 +177,44 @@ const EditListProps = ({ props }) => {
               isDisabled={!list}
             />
           </Flex>
-          <Divider size="S"/>
+          <Divider size="S" />
         </Fragment>
       ))}
     </Flex>
   );
 };
 
-const EditDelimiters = ({ items, label, name }) => {
+ListPropEditor.propTypes = {
+  allProps: PropTypes.array.isRequired
+};
+
+const DelimiterEditor = ({ items, label, name }) => {
   return (
-    <Flex
-      direction="column"
-      width="size-3600"
-      gap="size-100"
-    >
+    <Flex direction="column" width="size-3600" gap="size-100">
       <Flex
         direction="row"
         gap="size-100"
         alignItems="center"
         marginStart="size-200"
       >
-        <Heading level="4" width="size-1600" marginBottom="size-0" marginTop="size-0">{label}</Heading>
-        <Heading level="4" width="size-1600" marginBottom="size-0" marginTop="size-0">Delimiter</Heading>
+        <Heading
+          level="4"
+          width="size-1600"
+          marginBottom="size-0"
+          marginTop="size-0"
+        >
+          {label}
+        </Heading>
+        <Heading
+          level="4"
+          width="size-1600"
+          marginBottom="size-0"
+          marginTop="size-0"
+        >
+          Delimiter
+        </Heading>
       </Flex>
-      <Divider size="S"/>
+      <Divider size="S" />
       {items.map(({ key }, i) => (
         <Fragment key={key}>
           <Flex
@@ -192,11 +223,7 @@ const EditDelimiters = ({ items, label, name }) => {
             alignItems="center"
             marginStart="size-200"
           >
-            <View
-              width="size-1600"
-            >
-              {key}
-            </View>
+            <View width="size-1600">{key}</View>
             <FormikTextField
               name={`${name}s.${i}.delimiter`}
               data-test-id={`${name}${i}DelimiterField`}
@@ -204,24 +231,33 @@ const EditDelimiters = ({ items, label, name }) => {
               aria-label="Delimiter"
             />
           </Flex>
-          <Divider size="S"/>
+          <Divider size="S" />
         </Fragment>
       ))}
     </Flex>
   );
 };
 
-const AnalyticsXdm = () => {
+DelimiterEditor.propTypes = {
+  items: PropTypes.array.isRequired,
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
+};
 
+const AnalyticsXdm = () => {
   const [editSection, setEditSection] = useState("");
 
-  const [{value: props}] = useField("props");
-  const [{value: lists}] = useField("lists");
-  const [{value: hiers}] = useField("hiers");
+  const [{ value: allProps }] = useField("props");
+  const [{ value: allLists }] = useField("lists");
+  const [{ value: allHiers }] = useField("hiers");
 
-  const filteredProps = props.filter(({ list }) => list);
-  const filteredLists = lists.filter(({ delimiter }) => delimiter !== DEFAULT_LIST_DELIMITER);
-  const filteredHiers = hiers.filter(({ delimiter }) => delimiter !== DEFAULT_HIER_DELIMITER);
+  const filteredProps = allProps.filter(({ list }) => list);
+  const filteredLists = allLists.filter(
+    ({ delimiter }) => delimiter !== DEFAULT_LIST_DELIMITER
+  );
+  const filteredHiers = allHiers.filter(
+    ({ delimiter }) => delimiter !== DEFAULT_HIER_DELIMITER
+  );
 
   return (
     <FormElementContainer>
@@ -229,14 +265,20 @@ const AnalyticsXdm = () => {
         <FormikTextField
           data-test-id="trackerField"
           name="tracker"
-          description={"Enter the name of the tracker variable (i.e. \"s\") or specify a data element that resolves to the tracker."}
+          description={
+            'Enter the name of the tracker variable (i.e. "s") or specify a data element that resolves to the tracker.'
+          }
           label="Tracker"
           width="size-5000"
         />
       </DataElementSelector>
       <Flex direction="row" gap="size-200">
         {editSection !== "props" && filteredProps.length === 0 && (
-          <Alert variant="informative" title="List prop delimiters" width="size-3600">
+          <Alert
+            variant="informative"
+            title="List prop delimiters"
+            width="size-3600"
+          >
             <Text>No list props have been configured.</Text>
           </Alert>
         )}
@@ -255,7 +297,7 @@ const AnalyticsXdm = () => {
         )}
         {editSection === "props" && (
           <>
-            <EditListProps props={props} />
+            <ListPropEditor allProps={allProps} />
             <Button
               variant="secondary"
               data-test-id="doneEditProps"
@@ -268,8 +310,15 @@ const AnalyticsXdm = () => {
       </Flex>
       <Flex direction="row" gap="size-200">
         {editSection !== "lists" && filteredLists.length === 0 && (
-          <Alert variant="informative" title="List variable delimiters" width="size-3600">
-            <Text>No custom delimiters have been defined. All list variables will use the default delimiter "{DEFAULT_LIST_DELIMITER}".</Text>
+          <Alert
+            variant="informative"
+            title="List variable delimiters"
+            width="size-3600"
+          >
+            <Text>
+              No custom delimiters have been defined. All list variables will
+              use the default delimiter &quot;{DEFAULT_LIST_DELIMITER}&quot;.
+            </Text>
           </Alert>
         )}
         {editSection !== "lists" && filteredLists.length > 0 && (
@@ -281,13 +330,17 @@ const AnalyticsXdm = () => {
             data-test-id="editLists"
             onPress={() => setEditSection("lists")}
           >
-            <EditIcon/>
+            <EditIcon />
             <Text>Edit list variables</Text>
           </Button>
         )}
         {editSection === "lists" && (
           <>
-            <EditDelimiters items={lists} label="List variable" name="list"/>
+            <DelimiterEditor
+              items={allLists}
+              label="List variable"
+              name="list"
+            />
             <Button
               variant="secondary"
               data-test-id="doneEditLists"
@@ -300,8 +353,16 @@ const AnalyticsXdm = () => {
       </Flex>
       <Flex direction="row" gap="size-200">
         {editSection !== "hiers" && filteredHiers.length === 0 && (
-          <Alert variant="informative" title="Hierarchy variable delimiters" width="size-3600">
-            <Text>No custom delimiters have been defined. All hierarchy variables will use the default delimiter "{DEFAULT_HIER_DELIMITER}".</Text>
+          <Alert
+            variant="informative"
+            title="Hierarchy variable delimiters"
+            width="size-3600"
+          >
+            <Text>
+              No custom delimiters have been defined. All hierarchy variables
+              will use the default delimiter &quot;{DEFAULT_HIER_DELIMITER}
+              &quot;.
+            </Text>
           </Alert>
         )}
         {editSection !== "hiers" && filteredHiers.length > 0 && (
@@ -313,13 +374,17 @@ const AnalyticsXdm = () => {
             data-test-id="editHiers"
             onPress={() => setEditSection("hiers")}
           >
-            <EditIcon/>
+            <EditIcon />
             <Text>Edit hierarchy variables</Text>
           </Button>
         )}
         {editSection === "hiers" && (
           <>
-            <EditDelimiters items={hiers} label="Hierarchy variable" name="hier"/>
+            <DelimiterEditor
+              items={allHiers}
+              label="Hierarchy variable"
+              name="hier"
+            />
             <Button
               variant="secondary"
               data-test-id="doneEditHiers"
@@ -332,7 +397,7 @@ const AnalyticsXdm = () => {
       </Flex>
     </FormElementContainer>
   );
-}
+};
 
 const AnalyticsXdmExtensionView = () => {
   return (
@@ -340,9 +405,7 @@ const AnalyticsXdmExtensionView = () => {
       getInitialValues={getInitialValues}
       getSettings={getSettings}
       formikStateValidationSchema={validationSchema}
-      render={() => (
-        <AnalyticsXdm />
-      )}
+      render={() => <AnalyticsXdm />}
     />
   );
 };

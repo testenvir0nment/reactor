@@ -1,13 +1,13 @@
 const { setValue } = require("../../utils/pathUtils");
 
 const DEFAULT_EVENTS = {
-  "purchase": "purchases",
-  "prodView": "productListViews",
-  "scOpen": "productListOpens",
-  "scAdd": "productListAdds",
-  "scRemove": "productListRemoves",
-  "scView": "productListViews",
-  "scCheckout": "checkouts"
+  purchase: "purchases",
+  prodView: "productListViews",
+  scOpen: "productListOpens",
+  scAdd: "productListAdds",
+  scRemove: "productListRemoves",
+  scView: "productListViews",
+  scCheckout: "checkouts"
 };
 
 module.exports = (events, xdm) => {
@@ -25,11 +25,13 @@ module.exports = (events, xdm) => {
         return;
       }
       const start = Math.floor(key / 100) * 100;
-      path = `_experience.analytics.event${start + 1}to${start + 100}.event${i}`;
+      path = `_experience.analytics.event${start + 1}to${start +
+        100}.event${i}`;
     }
     const [value2, id] = `${value}`.split(":").reverse();
 
     const parsedValue = Number(value2);
+    // eslint-disable-next-line no-restricted-globals
     if (isNaN(parsedValue)) {
       return;
     }

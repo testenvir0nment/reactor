@@ -12,10 +12,13 @@ governing permissions and limitations under the License.
 
 const { setValue } = require("../../utils/pathUtils");
 
-const DEFAULT_ITEM = ["","","","","",""];
+const DEFAULT_ITEM = ["", "", "", "", "", ""];
 
 const parseKeyValue = keyValues => {
-  return keyValues.split("|").filter(keyValue => keyValue !== "").map(keyValue => keyValue.split("="));
+  return keyValues
+    .split("|")
+    .filter(keyValue => keyValue !== "")
+    .map(keyValue => keyValue.split("="));
 };
 
 const createParseNumberedKeyValues = (prefix, max) => {
@@ -23,7 +26,11 @@ const createParseNumberedKeyValues = (prefix, max) => {
   return keyValues => {
     return parseKeyValue(keyValues)
       .filter(([key, value]) => {
-        return key.length > l && key.substring(0,l).toLowerCase() === prefix && value !== ""
+        return (
+          key.length > l &&
+          key.substring(0, l).toLowerCase() === prefix &&
+          value !== ""
+        );
       })
       .map(([key, value]) => [parseInt(key.substring(l), 10), value])
       .filter(([key]) => key > 0 && key <= max);
@@ -31,8 +38,10 @@ const createParseNumberedKeyValues = (prefix, max) => {
 };
 
 const parseEvents = keyValues => {
-  return createParseNumberedKeyValues("event", 1000)(keyValues)
-    .filter(([, value]) => !isNaN(value));
+  return createParseNumberedKeyValues("event", 1000)(keyValues).filter(
+    // eslint-disable-next-line no-restricted-globals
+    ([, value]) => !isNaN(value)
+  );
 };
 const parseEvars = createParseNumberedKeyValues("evar", 250);
 
@@ -41,50 +50,62 @@ const addEventsTo = (eventsKeyValues, result) => {
     const start = Math.floor(key / 100) * 100;
     const subKey = `event${start + 1}to${start + 100}`;
     result[subKey] = result[subKey] || {};
-    result[subKey][`event${key}`] = { value: Number(value) }
+    result[subKey][`event${key}`] = { value: Number(value) };
   });
 };
 
 module.exports = (products, xdm) => {
-  const productListItems = products.split(",").map(item => {
-    const [category, productName, quantity, price, events, evars] = item.split(";").concat(DEFAULT_ITEM);
-    const quantityInteger = parseInt(quantity, 10);
-    const priceNumber = Number(price);
-    const eventsKeyValues = parseEvents(events);
-    const evarsKeyValues = parseEvars(evars);
-    const result = {};
-    if (category !== "") {
-      result.lineItemId = category;
-    }
-    if (productName !== "") {
-      result.name = productName;
-    }
-    if (quantity !== "" && !isNaN(quantityInteger)) {
-      result.quantity = quantityInteger;
-    }
-    if (price !== "" && !isNaN(priceNumber)) {
-      result.priceTotal = priceNumber;
-    }
-    if (evarsKeyValues.length > 0) {
-      result._experience = {
-        analytics: {
-          customDimensions: {
-            eVars: evarsKeyValues.reduce((memo, [key, value]) => {
-              memo[`eVar${key}`] = value;
-              return memo;
-            }, {})
-          }
-        }
+  const productListItems = products
+    .split(",")
+    .map(item => {
+      const [
+        category,
+        productName,
+        quantity,
+        price,
+        events,
+        evars
+      ] = item.split(";").concat(DEFAULT_ITEM);
+      const quantityInteger = parseInt(quantity, 10);
+      const priceNumber = Number(price);
+      const eventsKeyValues = parseEvents(events);
+      const evarsKeyValues = parseEvars(evars);
+      const result = {};
+      if (category !== "") {
+        result.lineItemId = category;
       }
-    }
-    if (eventsKeyValues.length > 0) {
-      result._experience = result._experience || { analytics: {} };
-      addEventsTo(eventsKeyValues, result._experience.analytics);
-    }
-    return result;
-  }).filter(result => Object.keys(result).length !== 0);
+      if (productName !== "") {
+        result.name = productName;
+      }
+      // eslint-disable-next-line no-restricted-globals
+      if (quantity !== "" && !isNaN(quantityInteger)) {
+        result.quantity = quantityInteger;
+      }
+      // eslint-disable-next-line no-restricted-globals
+      if (price !== "" && !isNaN(priceNumber)) {
+        result.priceTotal = priceNumber;
+      }
+      if (evarsKeyValues.length > 0) {
+        result._experience = {
+          analytics: {
+            customDimensions: {
+              eVars: evarsKeyValues.reduce((memo, [key, value]) => {
+                memo[`eVar${key}`] = value;
+                return memo;
+              }, {})
+            }
+          }
+        };
+      }
+      if (eventsKeyValues.length > 0) {
+        result._experience = result._experience || { analytics: {} };
+        addEventsTo(eventsKeyValues, result._experience.analytics);
+      }
+      return result;
+    })
+    .filter(result => Object.keys(result).length !== 0);
 
   if (productListItems.length > 0) {
     setValue(xdm, "productListItems", productListItems);
   }
- };
+};
