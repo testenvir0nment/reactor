@@ -3,64 +3,64 @@ const productsMapper = require("./productsMapper");
 const eventsMapper = require("./eventsMapper");
 
 const stringMapper = dest => (value, xdm) => {
-  setValue(xdm, dest, `${value}`);
+  return setValue(xdm, dest, `${value}`);
 };
 
 const errorPageMapper = (value, xdm) => {
   if (value === "errorPage") {
-    setValue(xdm, "web.webPageDetails.errorPage", true);
+    return setValue(xdm, "web.webPageDetails.errorPage", true);
   }
+  return xdm;
 };
 
 const staticKeyMapper = mappers => (key, value, xdm) => {
   if (!mappers[key]) {
-    return false;
+    return undefined;
   }
   if (value) {
-    mappers[key](value, xdm);
+    return mappers[key](value, xdm);
   }
-  return true;
+  return xdm;
 };
 
 const numberedKeyMapper = (prefix, max, mapper) => (key, value, xdm) => {
   if (key.length <= prefix.length) {
-    return false;
+    return undefined;
   }
   if (key.substring(0, prefix.length) !== prefix) {
-    return false;
+    return undefined;
   }
   const i = parseInt(key.substring(prefix.length), 10);
   if (i <= 0 || i > max) {
-    return false;
+    return undefined;
   }
   if (value) {
-    mapper(i, value, xdm);
+    return mapper(i, value, xdm);
   }
-  return true;
+  return xdm;
 };
 
 const propMapper = delimiters => (key, value, xdm) => {
   const delimiter = delimiters[`prop${key}`];
   if (delimiter) {
     const values = `${value}`.split(delimiter);
-    setValue(
+    return setValue(
       xdm,
       `_experience.analytics.customDimensions.listProps.prop${key}`,
       { delimiter, values }
     );
-  } else {
-    setValue(
-      xdm,
-      `_experience.analytics.customDimensions.props.prop${key}`,
-      `${value}`
-    );
   }
+  return setValue(
+    xdm,
+    `_experience.analytics.customDimensions.props.prop${key}`,
+    `${value}`
+  );
 };
 
 const hierMapper = delimiters => (key, value, xdm) => {
   const delimiter = delimiters[`hier${key}`] || "|";
   const values = `${value}`.split(delimiter);
-  setValue(
+  return setValue(
     xdm,
     `_experience.analytics.customDimensions.hierarchies.hier${key}`,
     { delimiter, values }
@@ -71,7 +71,7 @@ const listMapper = delimiters => (key, value, xdm) => {
   const list = `${value}`
     .split(delimiters[`list${key}`] || ",")
     .map(item => ({ value: item }));
-  setValue(
+  return setValue(
     xdm,
     `_experience.analytics.customDimensions.lists.list${key}`,
     list
@@ -79,7 +79,7 @@ const listMapper = delimiters => (key, value, xdm) => {
 };
 
 const evarMapper = (key, value, xdm) => {
-  setValue(
+  return setValue(
     xdm,
     `_experience.analytics.customDimensions.eVars.eVar${key}`,
     `${value}`
@@ -127,13 +127,16 @@ module.exports = settings => {
   mappers.push(numberedKeyMapper("list", 3, listMapper(delimiters)));
   mappers.push(numberedKeyMapper("eVar", 250, evarMapper));
 
-  const xdm = {};
+  let xdm = {};
   Object.keys(tracker || {}).forEach(key => {
     let i = 0;
-    let found = false;
-    while (!found && i < mappers.length) {
-      found = mappers[i](key, tracker[key], xdm);
+    let newXdm;
+    while (newXdm === undefined && i < mappers.length) {
+      newXdm = mappers[i](key, tracker[key], xdm);
       i += 1;
+    }
+    if (newXdm !== undefined) {
+      xdm = newXdm;
     }
   });
   return xdm;
