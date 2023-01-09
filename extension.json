@@ -535,6 +535,27 @@
       "viewPath": "dataElements/xdmObject.html"
     },
     {
+      "displayName": "Analytics XDM",
+      "name": "analytics-xdm",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "tracker": {
+            "type": "string",
+            "minLength": 1
+          },
+          "delimiters": {
+            "type": "object"
+          }
+        },
+        "required": ["tracker"],
+        "additionalProperties": false
+      },
+      "libPath": "dist/lib/dataElements/analyticsXdm/index.js",
+      "viewPath": "dataElements/analyticsXdm.html"
+    },
+    {
       "displayName": "Variable",
       "name": "variable",
       "schema": {
