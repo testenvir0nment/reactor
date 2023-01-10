@@ -10,7 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import analyticsXdm from "../../../../../src/lib/dataElements/analyticsXdm/index";
+import injectAnalyticsXdm from "../../../../../src/lib/dataElements/analyticsXdm/injectAnalyticsXdm";
+import eventsMapper from "../../../../../src/lib/dataElements/analyticsXdm/eventsMapper";
+import productsMapper from "../../../../../src/lib/dataElements/analyticsXdm/productsMapper";
 
 describe("analyticsXdm", () => {
   let delimiters;
@@ -20,7 +22,11 @@ describe("analyticsXdm", () => {
   });
 
   const test = (tracker, expected) => {
-    const xdm = analyticsXdm({ tracker, delimiters });
+    const xdm = injectAnalyticsXdm({
+      getTracker: () => tracker,
+      eventsMapper,
+      productsMapper
+    })({ delimiters });
     // console.log(JSON.stringify(xdm, null, 2));
     expect(xdm).toEqual(expected);
   };
@@ -30,7 +36,11 @@ describe("analyticsXdm", () => {
   });
 
   it("handles undefined object", () => {
-    expect(() => test(undefined, {})).toThrow(new Error("Tracker was not an object."));
+    expect(() => test(undefined, {})).toThrow(
+      new Error(
+        "Could not find tracker. You need to install the Adobe Analytics extension to use this data element."
+      )
+    );
   });
 
   [["abc", "abc"], [true, "true"], [1, "1"], [-3.14, "-3.14"]].forEach(

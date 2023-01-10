@@ -10,19 +10,15 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import xdmFromTracker from "../../../../../src/lib/dataElements/analyticsXdm/index";
+import productsMapper from "../../../../../src/lib/dataElements/analyticsXdm/productsMapper";
 
 describe("products", () => {
   const test = (input, expected) => {
-    expect(xdmFromTracker({ tracker: { products: input } })).toEqual(expected);
+    expect(productsMapper(input, {})).toEqual(expected);
   };
 
   it("handles empty string", () => {
     test("", {});
-  });
-
-  it("handles undefined", () => {
-    test(undefined, {});
   });
 
   it("handles one semicolon", () => {
