@@ -32,7 +32,6 @@ import EditIcon from "@spectrum-icons/workflow/Edit";
 import render from "../render";
 import ExtensionView from "../components/extensionView";
 import FormElementContainer from "../components/formElementContainer";
-import DataElementSelector from "../components/dataElementSelector";
 import FormikTextField from "../components/formikReactSpectrum3/formikTextField";
 import FormikCheckbox from "../components/formikReactSpectrum3/formikCheckbox";
 import Alert from "../components/alert";
@@ -42,7 +41,7 @@ const DEFAULT_LIST_DELIMITER = ",";
 const DEFAULT_HIER_DELIMITER = "|";
 
 const getInitialValues = ({ initInfo }) => {
-  const { tracker = "", delimiters = {} } = initInfo.settings || {};
+  const { delimiters = {} } = initInfo.settings || {};
 
   const props = [];
   const lists = [];
@@ -68,7 +67,6 @@ const getInitialValues = ({ initInfo }) => {
   }
 
   return {
-    tracker,
     props,
     lists,
     hiers
@@ -76,7 +74,7 @@ const getInitialValues = ({ initInfo }) => {
 };
 
 const getSettings = ({ values }) => {
-  const { tracker, props, lists, hiers } = values;
+  const { props, lists, hiers } = values;
 
   const delimiters = {};
   props.forEach(({ key, list, delimiter }) => {
@@ -94,7 +92,7 @@ const getSettings = ({ values }) => {
       delimiters[key] = delimiter;
     }
   });
-  return { tracker, delimiters };
+  return { delimiters };
 };
 
 const validationSchema = object();
@@ -259,17 +257,6 @@ const AnalyticsXdm = () => {
 
   return (
     <FormElementContainer>
-      <DataElementSelector>
-        <FormikTextField
-          data-test-id="trackerField"
-          name="tracker"
-          description={
-            'Enter the name of the tracker variable (i.e. "s") or specify a data element that resolves to the tracker.'
-          }
-          label="Tracker"
-          width="size-5000"
-        />
-      </DataElementSelector>
       <Flex direction="row" gap="size-200">
         {editSection !== "props" && filteredProps.length === 0 && (
           <Alert
