@@ -10,15 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const productsMapper = require("./productsMapper");
-const eventsMapper = require("./eventsMapper");
-const injectAnalyticsXdm = require("./injectAnalyticsXdm");
-const injectGetTracker = require("./injectGetTracker");
+let tracker;
 
-const getTracker = injectGetTracker({ turbine });
+module.exports = ({ turbine }) => {
+  const getTracker = turbine.getSharedModule("adobe-analytics", "get-tracker");
 
-module.exports = injectAnalyticsXdm({
-  getTracker,
-  productsMapper,
-  eventsMapper
-});
+  getTracker().then(s => {
+    tracker = s;
+  });
+
+  return () => tracker;
+};

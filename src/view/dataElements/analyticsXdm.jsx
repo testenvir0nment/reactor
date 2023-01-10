@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 import React, { useState, Fragment } from "react";
 import PropTypes from "prop-types";
-import { object, string } from "yup";
+import { object } from "yup";
 import { useField } from "formik";
 import {
   Cell,
@@ -97,9 +97,7 @@ const getSettings = ({ values }) => {
   return { tracker, delimiters };
 };
 
-const validationSchema = object().shape({
-  tracker: string().required("Please specify a tracker.")
-});
+const validationSchema = object();
 
 const ViewDelimiters = ({ items, label }) => {
   return (
