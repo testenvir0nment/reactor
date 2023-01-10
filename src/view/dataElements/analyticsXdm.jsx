@@ -98,7 +98,7 @@ const getSettings = ({ values }) => {
 };
 
 const validationSchema = object().shape({
-  products: string().required("Please specify a product string")
+  tracker: string().required("Please specify a tracker.")
 });
 
 const ViewDelimiters = ({ items, label }) => {
