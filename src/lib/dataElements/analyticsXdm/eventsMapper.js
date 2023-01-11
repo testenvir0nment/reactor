@@ -15,7 +15,7 @@ module.exports = (events, xdm) => {
     const [key, value = "1"] = event.split("=");
     let path;
     if (DEFAULT_EVENTS[key]) {
-      path = `commerce.${DEFAULT_EVENTS[key]}.value`;
+      path = `commerce.${DEFAULT_EVENTS[key]}`;
     } else {
       if (key.length <= 5 || key.substring(0, 5) !== "event") {
         return memo;
