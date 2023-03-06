@@ -390,7 +390,7 @@
       "viewPath": "actions/applyResponse.html"
     },
     {
-      "displayName": "Update variable",
+      "displayName": "Update variable (Beta)",
       "name": "update-variable",
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
@@ -543,7 +543,7 @@
       "viewPath": "dataElements/xdmObject.html"
     },
     {
-      "displayName": "Analytics XDM",
+      "displayName": "Analytics XDM (Beta)",
       "name": "analytics-xdm",
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
@@ -559,7 +559,7 @@
       "viewPath": "dataElements/analyticsXdm.html"
     },
     {
-      "displayName": "Variable",
+      "displayName": "Variable (Beta)",
       "name": "variable",
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",

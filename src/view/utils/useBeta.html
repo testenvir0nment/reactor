@@ -1,0 +1,9 @@
+<script>
+  // the included tags library will call "setBeta", and the UI will call getBeta.
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(reject, 2000);
+    window.setBeta = resolve;
+  });
+  window.getBeta = () => promise;
+</script>
+<script src="{{ betaLibrary }}" async></script>

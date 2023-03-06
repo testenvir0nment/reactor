@@ -33,6 +33,7 @@ const ExtensionView = ({
   const viewRegistrationRef = useRef();
   const formikPropsRef = useRef();
   const getInitialValuesPromiseRef = useRef();
+  const betasRef = useRef([]);
   formikPropsRef.current = useFormik({
     onSubmit: () => {},
     validate: values => {
@@ -87,7 +88,9 @@ const ExtensionView = ({
       return true;
     }
 
-    return viewRegistrationRef.current.validateNonFormikState();
+    return viewRegistrationRef.current.validateNonFormikState({
+      betas: betasRef.current
+    });
   };
 
   useExtensionBridge({
@@ -101,7 +104,8 @@ const ExtensionView = ({
       try {
         return await viewRegistrationRef.current.getSettings({
           initInfo,
-          values: formikPropsRef.current.values
+          values: formikPropsRef.current.values,
+          betas: betasRef.current
         });
       } catch (e) {
         // This will update the UI to show that an error has occurred.
@@ -146,7 +150,21 @@ const ExtensionView = ({
     useEffect(async () => {
       if (initInfo) {
         try {
-          const getInitialValuesPromise = getInitialValues({ initInfo });
+          if (window.getBeta) {
+            try {
+              const betasByOrg = await window.getBeta();
+              const {
+                company: { orgId }
+              } = initInfo;
+              betasRef.current = betasByOrg[orgId] || [];
+            } catch (e) {
+              // console.log("Beta loading timed out", e);
+            }
+          }
+          const getInitialValuesPromise = getInitialValues({
+            initInfo,
+            betas: betasRef.current
+          });
           getInitialValuesPromiseRef.current = getInitialValuesPromise;
           formikPropsRef.current.resetForm({
             values: await getInitialValuesPromise
@@ -177,7 +195,8 @@ const ExtensionView = ({
       {render({
         initInfo,
         formikProps: formikPropsRef.current,
-        registerImperativeFormApi
+        registerImperativeFormApi,
+        betas: betasRef.current
       })}
     </FormikProvider>
   );

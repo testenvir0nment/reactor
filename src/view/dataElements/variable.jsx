@@ -13,7 +13,7 @@ import React, { useRef } from "react";
 import { object } from "yup";
 import { v4 as uuid } from "uuid";
 import PropTypes from "prop-types";
-import ExtensionView from "../components/extensionView";
+import BetaExtensionView from "../components/betaExtensionView";
 import FormElementContainer from "../components/formElementContainer";
 import XdmVariable, {
   bridge as xdmVariableBridge
@@ -61,7 +61,7 @@ Schema.propTypes = {
 const Variable = () => {
   const { current: xdmVariableContext } = useRef({});
   return (
-    <ExtensionView
+    <BetaExtensionView
       getInitialValues={getInitialValues({ xdmVariableContext })}
       getSettings={getSettings}
       formikStateValidationSchema={validationSchema}
@@ -70,6 +70,7 @@ const Variable = () => {
           <Schema xdmVariableContext={xdmVariableContext} initInfo={initInfo} />
         </FormElementContainer>
       )}
+      beta="variable"
     />
   );
 };

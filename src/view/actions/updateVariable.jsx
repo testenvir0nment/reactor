@@ -16,7 +16,7 @@ import { Item } from "@react-spectrum/combobox";
 import { useField } from "formik";
 import PropTypes from "prop-types";
 import render from "../render";
-import ExtensionView from "../components/extensionView";
+import BetaExtensionView from "../components/betaExtensionView";
 import FormElementContainer from "../components/formElementContainer";
 import getValueFromFormState from "../components/objectEditor/helpers/getValueFromFormState";
 import fetchDataElements from "../utils/fetchDataElements";
@@ -136,6 +136,7 @@ const getSettings = ({ values }) => {
   // everything is prefixed with "xdm", lets change that to data.
   const { xdm = {} } =
     getValueFromFormState({ formStateNode: values, transforms }) || {};
+
   const dataTransforms = Object.keys(transforms).reduce((memo, key) => {
     memo[key.substring(4)] = transforms[key];
     return memo;
@@ -249,13 +250,14 @@ const UpdateVariableExtensionView = () => {
   const { current: context } = useRef({});
 
   return (
-    <ExtensionView
+    <BetaExtensionView
       getInitialValues={getInitialValues(context)}
       getSettings={getSettings}
       formikStateValidationSchema={validationSchema}
       render={props => {
         return <UpdateVariable context={context} {...props} />;
       }}
+      beta="variable"
     />
   );
 };

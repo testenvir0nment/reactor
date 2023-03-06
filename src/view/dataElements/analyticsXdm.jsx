@@ -30,7 +30,7 @@ import {
 } from "@adobe/react-spectrum";
 import EditIcon from "@spectrum-icons/workflow/Edit";
 import render from "../render";
-import ExtensionView from "../components/extensionView";
+import BetaExtensionView from "../components/betaExtensionView";
 import FormElementContainer from "../components/formElementContainer";
 import FormikTextField from "../components/formikReactSpectrum3/formikTextField";
 import FormikCheckbox from "../components/formikReactSpectrum3/formikCheckbox";
@@ -386,11 +386,12 @@ const AnalyticsXdm = () => {
 
 const AnalyticsXdmExtensionView = () => {
   return (
-    <ExtensionView
+    <BetaExtensionView
       getInitialValues={getInitialValues}
       getSettings={getSettings}
       formikStateValidationSchema={validationSchema}
       render={() => <AnalyticsXdm />}
+      beta="variable"
     />
   );
 };
