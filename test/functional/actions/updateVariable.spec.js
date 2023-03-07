@@ -19,6 +19,7 @@ import spectrum from "../helpers/spectrum";
 import runCommonExtensionViewTests from "../runCommonExtensionViewTests";
 import xdmTree from "../helpers/objectEditor/xdmTree";
 import stringEdit from "../helpers/objectEditor/stringEdit";
+import setBetas from "../helpers/setBetas";
 
 const errorBoundaryMessage = spectrum.illustratedMessage(
   "errorBoundaryMessage"
@@ -30,6 +31,8 @@ createExtensionViewFixture({
   title: "Update variable action view",
   viewPath: "actions/updateVariable.html",
   requiresAdobeIOIntegration: true
+}).beforeEach(async () => {
+  await setBetas(["variable"]);
 });
 
 runCommonExtensionViewTests();
@@ -236,5 +239,17 @@ test.requestHooks(dataElementsMocks.multiple)(
         }
       }
     });
+  }
+);
+
+test.requestHooks(dataElementsMocks.none)(
+  "Shows warning alert when there are no matching data elements",
+  async () => {
+    await extensionViewController.init({
+      propertySettings: {
+        id: "PRabcd"
+      }
+    });
+    // TODO
   }
 );

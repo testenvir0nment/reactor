@@ -29,6 +29,12 @@ const extensionBridgeRequestMock = RequestMock()
   )
   .respond(extensionBridgeMockContent);
 
+const adobeTagsMock = RequestMock()
+  .onRequestTo(
+    "https://assets.adobedtm.com/1281f6ff0c59/4ea1cb9a4d6e/launch-0ccbb2739c60-development.min.js"
+  )
+  .respond("");
+
 const createExtensionViewFixture = ({
   title,
   viewPath,
@@ -38,7 +44,7 @@ const createExtensionViewFixture = ({
 }) => {
   let fixt = (only ? fixture.only : fixture)(title)
     .page(path.join(__dirname, "../../../dist/view", viewPath))
-    .requestHooks(extensionBridgeRequestMock, ...requestHooks)
+    .requestHooks(extensionBridgeRequestMock, adobeTagsMock, ...requestHooks)
     .clientScripts(preventSpecificErrorsFromFailingTestsPath);
 
   if (requiresAdobeIOIntegration) {
