@@ -2,6 +2,7 @@ import React from "react";
 import { object } from "yup";
 import ExtensionView from "../components/extensionView";
 import FormElementContainer from "../components/formElementContainer";
+import addAccept from "./addAccept";
 
 /**
  * This creates an extension view React component that can be rendered at the
@@ -10,7 +11,7 @@ import FormElementContainer from "../components/formElementContainer";
  * extension view.
  * @returns {function} - A React function component
  */
-export default (...parts) => {
+export default addAccept("ExtensionView", (...parts) => {
   const getInitialValues = ({ initInfo }) => {
     return parts.reduce((initialValues, part) => {
       if (part.getInitialValues) {
@@ -52,4 +53,4 @@ export default (...parts) => {
       )}
     />
   );
-};
+});

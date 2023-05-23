@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InstanceNamePicker from "../components/instanceNamePicker";
+import addAccept from "./addAccept";
 
 /**
  * This creates a form field for an instance name picker.
@@ -8,7 +9,7 @@ import InstanceNamePicker from "../components/instanceNamePicker";
  * @param {string} options.key - The formik key to use for this field.
  * @returns {FormPart}
  */
-export default ({ key }) => {
+export default addAccept("InstancePicker", ({ key }) => {
   const Component = ({ initInfo }) => {
     return (
       <InstanceNamePicker
@@ -38,4 +39,4 @@ export default ({ key }) => {
     validationSchema: {},
     Component
   };
-};
+});

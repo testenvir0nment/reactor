@@ -16,7 +16,7 @@ import FormikTextField from "../components/formikReactSpectrum3/formikTextField"
  * @param {string} options.description - The description to use for the field.
  * @returns {FormPart}
  */
-export default ({
+export default addAccept("TextField", ({
   key,
   isRequired = false,
   dataElementSupported = true,
@@ -82,4 +82,4 @@ export default ({
     },
     Component
   };
-};
+});

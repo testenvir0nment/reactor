@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import DataElementSelector from "../components/dataElementSelector";
 import FormikComboBox from "../components/formikReactSpectrum3/formikComboBox";
 import singleDataElementRegex from "../constants/singleDataElementRegex";
+import addAccept from "./addAccept";
 
 /**
  * Form builder for a combo box. Use this when you have a static list of items.
@@ -25,7 +26,7 @@ import singleDataElementRegex from "../constants/singleDataElementRegex";
  * "label". The "value" is the value that will be saved to the settings, and the
  * "label" is the text that will be shown in the combo box.
  */
-export default ({
+export default addAccept("ComboBox", ({
   key,
   isRequired = false,
   dataElementSupported = true,
@@ -131,4 +132,4 @@ export default ({
     },
     Component
   };
-};
+});

@@ -40,7 +40,7 @@ const DATA_ELEMENT = "dataElement";
  * components, the `prefixKey` prop will be set to `${key}.${index}.`
  * @returns {FormPart}
  */
-export default (
+export default addAccept("ObjectArray", (
   {
     key,
     label,
@@ -273,4 +273,4 @@ export default (
     initInfo: PropTypes.object.isRequired
   };
   return formPart;
-};
+});

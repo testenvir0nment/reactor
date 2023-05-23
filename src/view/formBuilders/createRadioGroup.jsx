@@ -8,6 +8,7 @@ import FormikRadioGroup from "../components/formikReactSpectrum3/formikRadioGrou
 import { DATA_ELEMENT_REQUIRED } from "../constants/validationErrorMessages";
 import FormikTextField from "../components/formikReactSpectrum3/formikTextField";
 import FieldSubset from "../components/fieldSubset";
+import addAccept from "./addAccept";
 
 /**
  * This creates a form field for a radio group and supports data elements.
@@ -29,7 +30,7 @@ import FieldSubset from "../components/fieldSubset";
  * should be objects with keys "value" and "label".
  * @returns {FormPart}
  */
-export default ({
+export default addAccept("RadioGroup", ({
   key,
   isRequired = false,
   dataElementSupported = true,
@@ -115,4 +116,4 @@ export default ({
       );
     }
   };
-};
+});

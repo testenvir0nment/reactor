@@ -34,7 +34,7 @@ const DATA_ELEMENT = "dataElement";
  * required. When required, the user will need to enter at least one string.
  * @returns {FormPart}
  */
-export default ({
+export default addAccept("StringArray", ({
   key,
   isRequired = false,
   label,
@@ -193,4 +193,4 @@ export default ({
       );
     }
   };
-};
+});

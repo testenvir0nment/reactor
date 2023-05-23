@@ -2,6 +2,7 @@ import React from "react";
 import { mixed } from "yup";
 import { useField } from "formik";
 import PropTypes from "prop-types";
+import addAccept from "./addAccept";
 
 /**
  * This function is used to create a form builder that conditionally renders
@@ -16,7 +17,7 @@ import PropTypes from "prop-types";
  *
  * @returns {FormPart}
  */
-export default (args, conditional, ...parts) => {
+export default addAccept("Conditional", (args, conditional, ...parts) => {
   const schemaParts = parts.reduce((shape, part) => {
     if (part.validationSchema) {
       Object.assign(shape, part.validationSchema);
@@ -82,4 +83,4 @@ export default (args, conditional, ...parts) => {
     validationSchema,
     Component
   };
-};
+});

@@ -4,6 +4,7 @@ import DataElementSelector from "../components/dataElementSelector";
 import FormikTextField from "../components/formikReactSpectrum3/formikTextField";
 import singleDataElementRegex from "../constants/singleDataElementRegex";
 import { DATA_ELEMENT_REQUIRED } from "../constants/validationErrorMessages";
+import addAccept from "./addAccept";
 
 /**
  * This creates a form field that is required to be a single data element.
@@ -14,7 +15,7 @@ import { DATA_ELEMENT_REQUIRED } from "../constants/validationErrorMessages";
  * @param {string} [options.description] - The description to use for this field.
  * @returns {FormPart}
  */
-export default ({ key, isRequired = false, label, description }) => {
+export default addAccept("DataElement", ({ key, isRequired = false, label, description }) => {
   let validationSchema = string().matches(
     singleDataElementRegex,
     DATA_ELEMENT_REQUIRED
@@ -55,4 +56,4 @@ export default ({ key, isRequired = false, label, description }) => {
       );
     }
   };
-};
+});
