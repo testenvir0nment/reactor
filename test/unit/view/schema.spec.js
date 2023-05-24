@@ -1,4 +1,4 @@
-import ApplyPropositionsExtensionView from "../../../src/view/actions/applyPropositionsExtensionView.jsx";
+import ApplyPropositionsExtensionView from "../../../src/view/actions/applyPropositions.jsx";
 
 fdescribe("schema", () => {
   it("works", () => {
