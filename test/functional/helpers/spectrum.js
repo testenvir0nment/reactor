@@ -68,9 +68,26 @@ const createExpectValue = selector => async value => {
 };
 
 const createExpectText = selector => async text => {
-  await t
+  await t.expect(selector.exists).ok();
+
+  for (let i = 0; i < 50; i += 1) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await t.expect(selector.innerText).eql(text);
+      break;
+    } catch (error) {
+      if (i === 49) {
+        throw error;
+      }
+      // eslint-disable-next-line no-await-in-loop
+      await t.wait(100);
+    }
+  }
+  /*
+      await t
     .expect(selector.withExactText(text).exists)
     .ok(`Text ${text} not found.`);
+  */
 };
 
 const createExpectMatch = selector => async value => {

@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { Link } from "@adobe/react-spectrum";
 import ErrorMessage from "./errorMessage";
 import UserReportableError from "../errors/userReportableError";
+import { ErrorContext } from "./errorContext";
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -25,6 +26,10 @@ export default class ErrorBoundary extends Component {
   static getDerivedStateFromError(error) {
     return { error };
   }
+
+  setError = error => {
+    this.setState({ error });
+  };
 
   render() {
     const { error } = this.state;
@@ -62,7 +67,11 @@ export default class ErrorBoundary extends Component {
       );
     }
 
-    return children;
+    return (
+      <ErrorContext.Provider value={this.setError}>
+        {children}
+      </ErrorContext.Provider>
+    );
   }
 }
 

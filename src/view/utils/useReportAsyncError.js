@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { useState } from "react";
+import { useContext } from "react";
+import { ErrorContext } from "../components/errorContext";
 
 // We have a top-level error boundary for displaying errors that would be
 // considered fatal. Error boundaries only catch errors in certain
@@ -23,7 +24,7 @@ import { useState } from "react";
 // a try catch that reports the async error. Otherwise this will return a function
 // that you can call with the error to display.
 const useReportAsyncError = func => {
-  const [, setState] = useState();
+  const setError = useContext(ErrorContext);
 
   if (func) {
     return async (...args) => {
@@ -31,19 +32,16 @@ const useReportAsyncError = func => {
         await func(...args);
       } catch (e) {
         if (e.name !== "AbortError") {
-          setState(() => {
-            throw e;
-          });
+          setError(e);
+        } else {
+          throw e;
         }
-        throw e;
       }
     };
   }
 
   return error => {
-    setState(() => {
-      throw error;
-    });
+    setError(error);
   };
 };
 

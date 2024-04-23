@@ -377,6 +377,7 @@ test.requestHooks(
   schemaMocks.schema3b
 )("Allows you to select a schema from the non-default sandbox", async () => {
   const extensionViewController = await initializeExtensionView({});
+
   await sandboxField.expectText("PRODUCTION Test Sandbox 2 (VA7)");
   await sandboxField.selectOption("PRODUCTION Test Sandbox 3 (VA7)");
 
