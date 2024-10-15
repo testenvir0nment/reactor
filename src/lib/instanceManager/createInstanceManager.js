@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+
 module.exports = ({
   turbine,
   window,
@@ -18,6 +19,7 @@ module.exports = ({
   orgId,
   wrapOnBeforeEventSend,
   getConfigOverrides,
+  transformAutoImplementation,
 }) => {
   const { instances: instancesSettings } = turbine.getExtensionSettings();
   const instanceByName = {};
@@ -51,6 +53,7 @@ module.exports = ({
       stagingEdgeConfigId,
       developmentEdgeConfigId,
       onBeforeEventSend,
+      autoImplementation = {},
       ...options
     }) => {
       const instance = createInstance({ name });
@@ -68,6 +71,8 @@ module.exports = ({
         edgeConfigId;
 
       options.edgeConfigOverrides = getConfigOverrides(options);
+
+      options.autoImplementation = transformAutoImplementation(autoImplementation);
 
       instance("configure", {
         ...options,

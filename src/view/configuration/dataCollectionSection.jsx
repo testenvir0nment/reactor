@@ -74,6 +74,14 @@ const contextOptions = [
       "Provides more detailed information about the client device, such as platform version, architecture, model, bitness (64 bit or 32 bit platforms), or full operating system version",
     default: false,
   },
+  {
+    label: "Structured data",
+    value: "structuredData",
+    testId: "contextStructuredDataField",
+    description:
+      "Automatically collects structured data from the page, such as data made available to search engines.",
+    default: false,
+  }
 ];
 
 const clickCollectionIsEnabled = (instanceValues) => {
@@ -386,33 +394,33 @@ const DataCollectionSection = ({ instanceFieldName }) => {
 
           {instanceValues.contextGranularity ===
             CONTEXT_GRANULARITY.SPECIFIC && (
-            <FieldSubset>
-              <FormikCheckboxGroup
-                aria-label="Context data categories"
-                name={`${instanceFieldName}.context`}
-              >
-                {contextOptions.map((contextOption) => {
-                  return (
-                    <FieldDescriptionAndError
-                      description={contextOption.description}
-                      messagePaddingTop="size-0"
-                      messagePaddingStart="size-300"
-                      key={contextOption.value}
-                    >
-                      <Checkbox
+              <FieldSubset>
+                <FormikCheckboxGroup
+                  aria-label="Context data categories"
+                  name={`${instanceFieldName}.context`}
+                >
+                  {contextOptions.map((contextOption) => {
+                    return (
+                      <FieldDescriptionAndError
+                        description={contextOption.description}
+                        messagePaddingTop="size-0"
+                        messagePaddingStart="size-300"
                         key={contextOption.value}
-                        data-test-id={contextOption.testId}
-                        value={contextOption.value}
-                        width="size-5000"
                       >
-                        {contextOption.label}
-                      </Checkbox>
-                    </FieldDescriptionAndError>
-                  );
-                })}
-              </FormikCheckboxGroup>
-            </FieldSubset>
-          )}
+                        <Checkbox
+                          key={contextOption.value}
+                          data-test-id={contextOption.testId}
+                          value={contextOption.value}
+                          width="size-5000"
+                        >
+                          {contextOption.label}
+                        </Checkbox>
+                      </FieldDescriptionAndError>
+                    );
+                  })}
+                </FormikCheckboxGroup>
+              </FieldSubset>
+            )}
         </div>
       </FormElementContainer>
     </>

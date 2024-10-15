@@ -62,10 +62,14 @@ import { FIELD_NAMES } from "../components/overrides/utils";
 import StreamingMediaSection, {
   bridge as mediaBridge,
 } from "./streamingMediaSection";
+import AutoImplementationSection, {
+  bridge as autoImplementationSectionBridge,
+} from "./autoImplementationSection";
 
 const sectionBridges = [
   basicSectionBridge,
   edgeConfigurationsSectionBridge,
+  autoImplementationSectionBridge,
   privacySectionBridge,
   identitySectionBridge,
   personalizationSectionBridge,
@@ -218,6 +222,9 @@ const Configuration = ({ initInfo, context }) => {
                           instanceIndex={index}
                           initInfo={initInfo}
                           context={context}
+                        />
+                        <AutoImplementationSection
+                          instanceFieldName={instanceFieldName}
                         />
                         <PrivacySection instanceFieldName={instanceFieldName} />
                         <IdentitySection

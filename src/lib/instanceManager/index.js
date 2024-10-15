@@ -18,6 +18,7 @@ const { createInstance, createEventMergeId } = require("../alloy");
 const createInstanceManager = require("./createInstanceManager");
 const injectWrapOnBeforeEventSend = require("./injectWrapOnBeforeEventSend");
 const createGetConfigOverrides = require("../utils/createGetConfigOverrides");
+const transformAutoImplementation = require("./transformAutoImplementation");
 
 const version = "__VERSION__";
 
@@ -31,4 +32,5 @@ module.exports = createInstanceManager({
   orgId: _satellite.company.orgId,
   wrapOnBeforeEventSend,
   getConfigOverrides: createGetConfigOverrides(turbine.environment?.stage),
+  transformAutoImplementation,
 });

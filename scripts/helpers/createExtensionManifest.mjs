@@ -190,8 +190,8 @@ const createExtensionManifest = ({ version }) => {
   /** @type {ExtensionManifest} */
   const extensionManifest = {
     version,
-    displayName: "Adobe Experience Platform Web SDK",
-    name: "adobe-alloy",
+    displayName: "Adobe Experience Platform Web SDK (josnyder)",
+    name: "adobe-alloy-josnyder",
     iconPath: "resources/images/icon.svg",
     exchangeUrl:
       "https://exchange.adobe.com/experiencecloud.details.106387.aep-web-sdk.html",
@@ -321,6 +321,7 @@ const createExtensionManifest = ({ version }) => {
                       "environment",
                       "placeContext",
                       "highEntropyUserAgentHints",
+                      "structuredData",
                     ],
                   },
                 },
@@ -368,6 +369,41 @@ const createExtensionManifest = ({ version }) => {
                   },
                   additionalProperties: false,
                 },
+                autoImplementation: {
+                  type: "object",
+                  properties: {
+                    personalizationEventTriggerType: {
+                      type: "string",
+                      enum: ["library", "acdl", "custom", "disabled"],
+                    },
+                    personalizationEventTriggerAcdlEvent: {
+                      type: "string",
+                    },
+                    personalizationEventTriggerCode: {
+                      type: "string",
+                    },
+                    stateEventTriggerType: {
+                      type: "string",
+                      enum: ["load", "acdl", "custom", "disabled"],
+                    },
+                    stateEventTriggerAcdlEvent: {
+                      type: "string",
+                    },
+                    stateEventTriggerCode: {
+                      type: "string",
+                    },
+                    actionEventTriggerType: {
+                      type: "string",
+                      enum: ["acdl", "custom", "disabled"],
+                    },
+                    actionEventTriggerAcdlEvent: {
+                      type: "string",
+                    },
+                    actionEventTriggerCode: {
+                      type: "string",
+                    },
+                  }
+                }
               },
               required: ["edgeConfigId", "name"],
               additionalProperties: false,
@@ -408,6 +444,21 @@ const createExtensionManifest = ({ version }) => {
         {
           type: "remove",
           propertyPath: "instances[].developmentSandbox",
+        },
+        {
+          type: "function",
+          propertyPath: "instances[].autoImplementation.personalizationEventTriggerCode",
+          parameters: ["trigger"],
+        },
+        {
+          type: "function",
+          propertyPath: "instances[].autoImplementation.stateEventTriggerCode",
+          parameters: ["trigger"],
+        },
+        {
+          type: "function",
+          propertyPath: "instances[].autoImplementation.actionEventTriggerCode",
+          parameters: ["trigger"],
         },
         ...createEdgeConfigOverridesTransforms(false),
       ],
